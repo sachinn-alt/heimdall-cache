@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeimdallCache — Living Semantic Cache for Bifrost Gateway</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bifrost: {
+                            50: '#f5f3ff',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            900: '#2e1065',
+                        },
+                        tavily: {
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 3s infinite ease-in-out;
+        }
+        .glow-bifrost {
+            box-shadow: 0 0 25px -5px rgba(124, 58, 237, 0.4);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-purple-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-500/20">
+                    🌈
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-purple-400 via-indigo-300 to-cyan-400 bg-clip-text text-transparent">HeimdallCache</span>
+                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-purple-900/50 text-purple-300 border border-purple-700/50">v1.0 Gateway</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Living Semantic Cache for Bifrost · Powered by Tavily</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 text-xs bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span class="text-slate-300 font-medium">Bifrost Proxy Active: <span class="text-cyan-400">:8000</span></span>
+                </div>
+                <a href="https://github.com/sachinn-alt/heimdall-cache" target="_blank" class="p-2 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors">
+                    <i data-lucide="github" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Hero Header -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-950/40 via-slate-900 to-cyan-950/30 border border-purple-900/30 p-8 glow-bifrost">
+            <div class="relative z-10 max-w-3xl">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold mb-4">
+                    <span>🏆 Global AI Hackathon Submission</span>
+                    <span>•</span>
+                    <span class="text-cyan-400">Bifrost Priority Track + Tavily Partner</span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+                    Semantic Caches Rot. <span class="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Heimdall Never Forgets, Never Stales.</span>
+                </h1>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Traditional LLM gateway caching saves token costs but blindly serves <strong>outdated pricing, dead APIs, and obsolete policies</strong>. HeimdallCache actively monitors semantic cache vectors with <strong>Tavily live-web delta probes</strong>, auto-invalidating and refreshing decaying truths in sub-milliseconds.
+                </p>
+            </div>
+        </div>
+
+        <!-- Real-Time Metrics Strip -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="metrics-strip">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 relative overflow-hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Requests</span>
+                    <i data-lucide="activity" class="w-4 h-4 text-purple-400"></i>
+                </div>
+                <div class="text-2xl font-bold text-white" id="stat-total">0</div>
+                <p class="text-xs text-slate-500 mt-1">Routed via Heimdall Proxy</p>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 relative overflow-hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Verified Cache Hits</span>
+                    <i data-lucide="zap" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div class="text-2xl font-bold text-emerald-400" id="stat-hits">0</div>
+                <p class="text-xs text-slate-500 mt-1">&lt; 5ms Average Latency</p>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 relative overflow-hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Stale Drift Caught</span>
+                    <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i>
+                </div>
+                <div class="text-2xl font-bold text-amber-400" id="stat-invalidations">0</div>
+                <p class="text-xs text-slate-500 mt-1">Tavily Invalidation Probes</p>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 relative overflow-hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tokens Saved</span>
+                    <i data-lucide="coins" class="w-4 h-4 text-cyan-400"></i>
+                </div>
+                <div class="text-2xl font-bold text-cyan-400" id="stat-tokens">0</div>
+                <p class="text-xs text-slate-500 mt-1">Cost Avoidance via Living Cache</p>
+            </div>
+        </div>
+
+        <!-- Interactive Gateway Playground -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left: Query Console -->
+            <div class="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="terminal" class="w-5 h-5 text-purple-400"></i>
+                            <h2 class="text-lg font-bold text-white">Live Proxy Playground</h2>
+                        </div>
+                        <span class="text-xs font-mono text-purple-300 bg-purple-950/60 px-2.5 py-1 rounded border border-purple-800/40">/v1/chat/completions</span>
+                    </div>
+
+                    <!-- Preset Scenarios -->
+                    <div class="mb-4">
+                        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">Try Benchmarked Scenarios:</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setPrompt('What is the monthly pricing for Twitter X Premium?')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                                🚨 Twitter X Pricing (Stale Test)
+                            </button>
+                            <button onclick="setPrompt('What is the time complexity of QuickSort in the average case?')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                                🔒 QuickSort Complexity (Static)
+                            </button>
+                            <button onclick="setPrompt('What is the latest release version of Node.js?')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                                📦 Node.js Version (API Probe)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input Box -->
+                    <div class="space-y-3">
+                        <label for="prompt-input" class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Prompt / Request Payload:</label>
+                        <textarea id="prompt-input" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 font-mono transition" placeholder="Enter query to route through Heimdall Gateway..."></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-800/80">
+                    <div class="text-xs text-slate-500">
+                        <span class="inline-block w-2 h-2 rounded-full bg-cyan-400 mr-1.5"></span>Tavily Grounding: Active
+                    </div>
+                    <button id="send-btn" onclick="sendQuery()" class="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-purple-600/30 transition transform active:scale-95">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        <span>Execute via Heimdall</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Response & Invalidation Inspector -->
+            <div class="lg:col-span-6 bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="radar" class="w-5 h-5 text-cyan-400"></i>
+                            <h2 class="text-lg font-bold text-white">Heimdall Telemetry & Freshness Radar</h2>
+                        </div>
+                        <div id="status-badge" class="hidden text-xs font-bold px-2.5 py-1 rounded-full uppercase"></div>
+                    </div>
+
+                    <!-- Telemetry Stats Grid -->
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/80 text-center">
+                            <div class="text-xs text-slate-500 font-medium">Similarity</div>
+                            <div id="res-sim" class="text-sm font-bold text-slate-200 mt-0.5">-</div>
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/80 text-center">
+                            <div class="text-xs text-slate-500 font-medium">Freshness Score</div>
+                            <div id="res-fresh" class="text-sm font-bold text-slate-200 mt-0.5">-</div>
+                        </div>
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/80 text-center">
+                            <div class="text-xs text-slate-500 font-medium">Proxy Latency</div>
+                            <div id="res-latency" class="text-sm font-bold text-slate-200 mt-0.5">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Response Content Output -->
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Gateway Output:</span>
+                        <div id="res-content" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-300 font-mono min-h-[140px] whitespace-pre-wrap overflow-y-auto max-h-[220px]">
+                            Awaiting request... Run a query to inspect live cache behavior.
+                        </div>
+                    </div>
+
+                    <!-- Tavily Live Sources -->
+                    <div id="sources-container" class="mt-4 hidden">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">Tavily Verified Sources:</span>
+                        <div id="sources-list" class="flex flex-wrap gap-2 text-xs"></div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
+                    <span>Engine: Bifrost OpenAI Compatible Surface</span>
+                    <span>Tavily Delta-Probe v1</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Living Semantic Cache Inspector Table -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="database" class="w-5 h-5 text-indigo-400"></i>
+                        <span>Living Cache Vectors</span>
+                    </h2>
+                    <p class="text-xs text-slate-400">Inspecting cached vectors with real-time volatility classes and decay half-lives.</p>
+                </div>
+                <button onclick="refreshCacheEntries()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center space-x-1.5 transition">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950/70 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                        <tr>
+                            <th class="py-3 px-4">Cached Prompt</th>
+                            <th class="py-3 px-4">Volatility</th>
+                            <th class="py-3 px-4">Freshness</th>
+                            <th class="py-3 px-4">Hits</th>
+                            <th class="py-3 px-4">Status</th>
+                            <th class="py-3 px-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cache-table-body" class="divide-y divide-slate-800/60 font-mono">
+                        <!-- Populated dynamically via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- App JavaScript -->
+    <script>
+        lucide.createIcons();
+
+        function setPrompt(text) {
+            document.getElementById('prompt-input').value = text;
+        }
+
+        async function fetchMetrics() {
+            try {
+                const res = await fetch('/api/metrics');
+                const data = await res.json();
+                document.getElementById('stat-total').innerText = data.metrics.total_requests;
+                document.getElementById('stat-hits').innerText = data.metrics.cache_hits;
+                document.getElementById('stat-invalidations').innerText = data.metrics.stale_invalidations;
+                document.getElementById('stat-tokens').innerText = data.metrics.tokens_saved.toLocaleString();
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function refreshCacheEntries() {
+            try {
+                const res = await fetch('/api/cache/entries');
+                const entries = await res.json();
+                const tbody = document.getElementById('cache-table-body');
+                tbody.innerHTML = '';
+
+                entries.forEach(e => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-800/40 transition-colors';
+
+                    let volClass = 'bg-slate-800 text-slate-300';
+                    if (e.max_volatility === 'HIGH') volClass = 'bg-amber-950 text-amber-300 border border-amber-800/50';
+                    else if (e.max_volatility === 'STATIC') volClass = 'bg-emerald-950 text-emerald-300 border border-emerald-800/50';
+
+                    let statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold ${e.status === 'DRIFT_DETECTED' ? 'bg-rose-950 text-rose-300 border border-rose-800' : 'bg-emerald-950 text-emerald-300 border border-emerald-800'}">${e.status}</span>`;
+
+                    row.innerHTML = `
+                        <td class="py-3 px-4 font-sans font-medium text-slate-100 max-w-xs truncate">${e.prompt}</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${volClass}">${e.max_volatility}</span></td>
+                        <td class="py-3 px-4 font-bold ${e.overall_freshness < 70 ? 'text-rose-400' : 'text-emerald-400'}">${e.overall_freshness}%</td>
+                        <td class="py-3 px-4 text-slate-400">${e.hit_count}</td>
+                        <td class="py-3 px-4">${statusBadge}</td>
+                        <td class="py-3 px-4 text-right">
+                            <button onclick="probeEntry('${e.id}')" class="px-2.5 py-1 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800/50 rounded text-[11px] font-sans transition">
+                                🔍 Tavily Probe
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function probeEntry(id) {
+            try {
+                const res = await fetch(`/api/cache/probe/${id}`, { method: 'POST' });
+                const data = await res.json();
+                alert(`Tavily Delta-Probe complete for vector ${id}!\nFreshness: ${data.freshness}%\nStatus: ${data.status}`);
+                refreshCacheEntries();
+                fetchMetrics();
+            } catch(e) {
+                alert('Probe failed: ' + e);
+            }
+        }
+
+        async function sendQuery() {
+            const prompt = document.getElementById('prompt-input').value.trim();
+            if (!prompt) return;
+
+            const btn = document.getElementById('send-btn');
+            btn.disabled = true;
+            btn.innerHTML = `<span class="animate-spin mr-1.5">🌀</span> Routing...`;
+
+            const resContent = document.getElementById('res-content');
+            resContent.innerText = 'Evaluating vector similarity & triggering Tavily Delta-Probes...';
+
+            try {
+                const response = await fetch('/v1/chat/completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [{ role: 'user', content: prompt }]
+                    })
+                });
+
+                const data = await response.json();
+                const choice = data.choices && data.choices[0] ? data.choices[0].message.content : JSON.stringify(data);
+                resContent.innerText = choice;
+
+                // Meta badges
+                const meta = data.heimdall_meta || {};
+                document.getElementById('res-sim').innerText = meta.similarity !== undefined ? `${(meta.similarity * 100).toFixed(1)}%` : '-';
+                document.getElementById('res-fresh').innerText = meta.freshness_score !== undefined ? `${meta.freshness_score}%` : '-';
+                document.getElementById('res-latency').innerText = meta.latency_ms !== undefined ? `${meta.latency_ms} ms` : '-';
+
+                const badge = document.getElementById('status-badge');
+                badge.classList.remove('hidden', 'bg-emerald-900', 'text-emerald-200', 'bg-amber-900', 'text-amber-200', 'bg-blue-900', 'text-blue-200', 'bg-rose-900', 'text-rose-200');
+
+                if (meta.status === 'CACHE_HIT') {
+                    badge.innerText = '⚡ VERIFIED CACHE HIT (< 5ms)';
+                    badge.classList.add('bg-emerald-900/80', 'text-emerald-300', 'border', 'border-emerald-700');
+                } else if (meta.status === 'STALE_INVALIDATED_AND_REFRESHED') {
+                    badge.innerText = '🚨 STALE DRIFT CAUGHT & HOT-INVALIDATED';
+                    badge.classList.add('bg-rose-900/80', 'text-rose-300', 'border', 'border-rose-700');
+                } else {
+                    badge.innerText = '🌐 CACHE MISS (GROUNDED & STORED)';
+                    badge.classList.add('bg-blue-900/80', 'text-blue-300', 'border', 'border-blue-700');
+                }
+
+                // Sources
+                const sourcesList = document.getElementById('sources-list');
+                const sourcesContainer = document.getElementById('sources-container');
+                sourcesList.innerHTML = '';
+                if (meta.sources && meta.sources.length > 0) {
+                    sourcesContainer.classList.remove('hidden');
+                    meta.sources.forEach(s => {
+                        const a = document.createElement('a');
+                        a.href = s;
+                        a.target = '_blank';
+                        a.className = 'text-cyan-400 hover:text-cyan-300 underline truncate max-w-xs block';
+                        a.innerText = s;
+                        sourcesList.appendChild(a);
+                    });
+                } else {
+                    sourcesContainer.classList.add('hidden');
+                }
+
+                fetchMetrics();
+                refreshCacheEntries();
+            } catch(e) {
+                resContent.innerText = 'Error: ' + e;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i><span>Execute via Heimdall</span>`;
+                lucide.createIcons();
+            }
+        }
+
+        // Initialize on load
+        fetchMetrics();
+        refreshCacheEntries();
+        setInterval(fetchMetrics, 5000);
+    </script>
+</body>
+</html>
