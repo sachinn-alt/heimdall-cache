@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Gateway Settings & Thresholds — HeimdallCache{% endblock %}
+
+{% block content %}
+<div class="space-y-8 max-w-4xl">
+
+    <!-- Header -->
+    <div class="pb-6 border-b border-white/[0.08]">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-mono font-semibold mb-2">
+            <span>GATEWAY ENGINE TUNING</span>
+        </div>
+        <h1 class="text-3xl font-extrabold text-white tracking-tight">
+            Heimdall <span class="font-serif italic text-purple-400 font-normal">Thresholds & Control Plane</span>
+        </h1>
+        <p class="text-slate-400 text-sm font-light mt-1">
+            Fine-tune vector matching boundaries, Tavily freshness eviction triggers, and upstream proxy routing.
+        </p>
+    </div>
+
+    <!-- Settings Form -->
+    <div class="skiper-card rounded-3xl p-8 space-y-8">
+        
+        <!-- Setting 1: Similarity Threshold -->
+        <div class="space-y-3 pb-6 border-b border-white/[0.06]">
+            <div class="flex items-center justify-between">
+                <div>
+                    <label class="text-sm font-bold text-white block">Semantic Similarity Threshold (Cosine)</label>
+                    <p class="text-xs text-slate-400 font-serif italic">Minimum vector similarity required to qualify as a potential cache hit.</p>
+                </div>
+                <span id="sim-val" class="text-base font-black text-purple-400 font-mono px-3 py-1 rounded-lg bg-purple-950/60 border border-purple-800/40">
+                    {{ settings.SIMILARITY_THRESHOLD }}
+                </span>
+            </div>
+            <input type="range" id="sim-slider" min="0.70" max="0.98" step="0.01" value="{{ settings.SIMILARITY_THRESHOLD }}" oninput="updateLabels()" class="w-full accent-purple-500">
+            <div class="flex justify-between text-[11px] text-slate-500 font-mono">
+                <span>0.70 (Aggressive Matching)</span>
+                <span>0.85 (Balanced Default)</span>
+                <span>0.98 (Near-Exact Match Only)</span>
+            </div>
+        </div>
+
+        <!-- Setting 2: Freshness Score Cutoff -->
+        <div class="space-y-3 pb-6 border-b border-white/[0.06]">
+            <div class="flex items-center justify-between">
+                <div>
+                    <label class="text-sm font-bold text-white block">Tavily Freshness Invalidation Cutoff (%)</label>
+                    <p class="text-xs text-slate-400 font-serif italic">If Tavily delta-probe scores a vector below this percentage, it is immediately evicted.</p>
+                </div>
+                <span id="fresh-val" class="text-base font-black text-cyan-400 font-mono px-3 py-1 rounded-lg bg-cyan-950/60 border border-cyan-800/40">
+                    {{ settings.FRESHNESS_THRESHOLD }}%
+                </span>
+            </div>
+            <input type="range" id="fresh-slider" min="50" max="95" step="1" value="{{ settings.FRESHNESS_THRESHOLD }}" oninput="updateLabels()" class="w-full accent-cyan-500">
+            <div class="flex justify-between text-[11px] text-slate-500 font-mono">
+                <span>50% (Permissive)</span>
+                <span>70% (Strict Default)</span>
+                <span>95% (Zero Tolerance)</span>
+            </div>
+        </div>
+
+        <!-- Setting 3: Upstream Gateway Base URL -->
+        <div class="space-y-3 pb-6 border-b border-white/[0.06]">
+            <div>
+                <label class="text-sm font-bold text-white block">Upstream Gateway URL</label>
+                <p class="text-xs text-slate-400 font-serif italic">The target Bifrost gateway or direct LLM endpoint to forward cache misses and refreshed queries.</p>
+            </div>
+            <input type="text" id="upstream-url" value="{{ settings.UPSTREAM_BASE_URL }}" class="w-full bg-slate-950 border border-white/[0.1] rounded-xl px-4 py-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-purple-500">
+            <div class="flex items-center space-x-2 text-[11px] text-slate-400 font-mono">
+                <span>Common targets:</span>
+                <button type="button" onclick="setUpstream('http://localhost:8080/v1')" class="underline hover:text-purple-300">Bifrost Gateway (:8080)</button>
+                <span>·</span>
+                <button type="button" onclick="setUpstream('https://api.openai.com/v1')" class="underline hover:text-purple-300">OpenAI Direct</button>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="flex items-center justify-between pt-2">
+            <div id="save-status" class="text-xs font-mono text-emerald-400 hidden flex items-center space-x-1.5">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span>Settings applied to running gateway!</span>
+            </div>
+            <button onclick="saveSettings()" class="shimmer-btn ml-auto px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-purple-600/30 transition active:scale-95 flex items-center space-x-2">
+                <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                <span>Save Configuration</span>
+            </button>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function updateLabels() {
+        document.getElementById('sim-val').innerText = document.getElementById('sim-slider').value;
+        document.getElementById('fresh-val').innerText = document.getElementById('fresh-slider').value + '%';
+    }
+
+    function setUpstream(url) {
+        document.getElementById('upstream-url').value = url;
+    }
+
+    async function saveSettings() {
+        const payload = {
+            similarity_threshold: parseFloat(document.getElementById('sim-slider').value),
+            freshness_threshold: parseFloat(document.getElementById('fresh-slider').value),
+            upstream_base_url: document.getElementById('upstream-url').value
+        };
+
+        try {
+            const res = await fetch('/api/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            const statusEl = document.getElementById('save-status');
+            statusEl.classList.remove('hidden');
+            setTimeout(() => { statusEl.classList.add('hidden'); }, 4000);
+            lucide.createIcons();
+        } catch(e) {
+            alert('Failed to save settings: ' + e);
+        }
+    }
+</script>
+{% endblock %}

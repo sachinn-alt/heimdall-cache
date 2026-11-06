@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HeimdallCache — Living Semantic Cache for Bifrost Gateway{% endblock %}</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                        serif: ['"Instrument Serif"', '"Playfair Display"', 'Georgia', 'serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        bifrost: {
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            950: '#1e0a3d',
+                        },
+                        tavily: {
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                            950: '#082f49',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: Plus Jakarta Sans + Instrument Serif + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- ReactBits & Skiper UI Bespoke Animations -->
+    <style>
+        /* Ambient Background Noise & Lighting */
+        body {
+            background-color: #030712;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* ReactBits Shimmer Button */
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .shimmer-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                60deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.18) 50%,
+                transparent 70%
+            );
+            transform: rotate(30deg) translateY(-100%);
+            transition: transform 0.75s ease;
+        }
+        .shimmer-btn:hover::before {
+            transform: rotate(30deg) translateY(100%);
+        }
+
+        /* Skiper Glass Card */
+        .skiper-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .skiper-card:hover {
+            border-color: rgba(168, 85, 247, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.15);
+        }
+
+        /* Radar Scanning Sweep */
+        @keyframes radar-sweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-radar {
+            animation: radar-sweep 4s linear infinite;
+        }
+
+        /* Subtle Glow Halos */
+        .glow-halo-purple {
+            box-shadow: 0 0 30px -5px rgba(124, 58, 237, 0.35);
+        }
+        .glow-halo-cyan {
+            box-shadow: 0 0 30px -5px rgba(6, 182, 212, 0.35);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen font-sans selection:bg-purple-500 selection:text-white flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <nav class="border-b border-white/[0.08] bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+            
+            <!-- Logo & Brand -->
+            <a href="/" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform duration-300">
+                    <span class="text-lg">🌈</span>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-purple-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent">HeimdallCache</span>
+                        <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-purple-950/80 text-purple-300 border border-purple-800/50">v1.2 PROXY</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 font-serif italic">The living gateway sentinel for Bifrost</p>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-1 p-1 bg-slate-900/80 rounded-xl border border-white/[0.06]">
+                <a href="/" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all {% if current_page == 'dashboard' %}bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                    <span>Console</span>
+                </a>
+                <a href="/cache" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all {% if current_page == 'cache' %}bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
+                    <i data-lucide="database" class="w-3.5 h-3.5"></i>
+                    <span>Living Vectors</span>
+                </a>
+                <a href="/analytics" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all {% if current_page == 'analytics' %}bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
+                    <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="/settings" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all {% if current_page == 'settings' %}bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                    <span>Thresholds</span>
+                </a>
+                <a href="/docs" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all {% if current_page == 'docs' %}bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30{% else %}text-slate-400 hover:text-slate-200 hover:bg-slate-800/50{% endif %}">
+                    <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                    <span>API Docs</span>
+                </a>
+            </div>
+
+            <!-- Status Indicator & GitHub -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-800/40 text-emerald-300 text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>TAVILY GROUNDING ACTIVE</span>
+                </div>
+                <a href="https://github.com/sachinn-alt/heimdall-cache" target="_blank" class="p-2 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/[0.08] rounded-xl transition-all hover:scale-105 active:scale-95" title="View Source on GitHub">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content Container -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/[0.08] bg-slate-950/90 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono">
+            <div>
+                HeimdallCache — Built for the <span class="text-purple-400">Global AI Hackathon</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span>Priority Track: <strong class="text-slate-300">Bifrost</strong></span>
+                <span>•</span>
+                <span>Track Partner: <strong class="text-cyan-400">Tavily</strong></span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
