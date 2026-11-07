@@ -7,12 +7,15 @@
 [![Bifrost Gateway Compatible](https://img.shields.io/badge/Bifrost-Compatible-8b5cf6.svg)](https://github.com/maximhq/bifrost)
 [![Tavily Powered](https://img.shields.io/badge/Tavily-Grounding_Active-06b6d4.svg)](https://tavily.com)
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-black?style=for-the-badge&logo=vercel)](https://swift-crater-u0h1f6i.tmp.now/)
+[![Deploy to Render](https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/sachinn-alt/heimdall-cache)
 [![Live on GitHub Pages](https://img.shields.io/badge/Live_Showcase-GitHub_Pages-8b5cf6?style=for-the-badge&logo=github)](https://sachinn-alt.github.io/heimdall-cache/)
 
 > 🚀 **Live Interactive Deployments:**
 > - **Full Backend & API Gateway on Vercel:** [https://swift-crater-u0h1f6i.tmp.now/](https://swift-crater-u0h1f6i.tmp.now/)
 > - **Interactive Pitch Deck:** [https://swift-crater-u0h1f6i.tmp.now/pitch](https://swift-crater-u0h1f6i.tmp.now/pitch) *(or [GitHub Pages Pitch](https://sachinn-alt.github.io/heimdall-cache/pitch.html))*
 > - **Client-Side Visual Showcase:** [https://sachinn-alt.github.io/heimdall-cache/](https://sachinn-alt.github.io/heimdall-cache/)
+> - **1-Click Turnkey Deploy on Render:**  
+>   [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sachinn-alt/heimdall-cache)
 
 HeimdallCache is an enterprise-grade living semantic cache middleware and proxy extension designed for the open-source **Bifrost AI Gateway** (`maximhq/bifrost`). It eliminates the critical vulnerability of traditional LLM caching—**factual staleness, cache rot, and silent hallucination**—by combining vector similarity search with automated entity volatility classification and real-time **Tavily Search** delta-probes.
 
@@ -133,6 +136,35 @@ HEIMDALL_FRESHNESS_THRESHOLD=70
 python run.py
 ```
 Open **[http://localhost:8000](http://localhost:8000)** in your browser to access the live dashboard.
+
+---
+
+## ☁️ Cloud Deployment Options
+
+### 1. Render (1-Click Blueprint or Docker)
+HeimdallCache includes native support for [Render](https://render.com) via `render.yaml` and `Dockerfile`:
+1. Click the button:  
+   [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sachinn-alt/heimdall-cache)
+2. Or in the [Render Dashboard](https://dashboard.render.com), create a **New Web Service** pointing to `https://github.com/sachinn-alt/heimdall-cache`.
+3. Set your `TAVILY_API_KEY` in Environment Variables.
+4. Render automatically configures:
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn heimdall.app:app --host 0.0.0.0 --port $PORT`
+   - **Health Check**: `/api/metrics`
+
+### 2. Docker Container
+Run anywhere with Docker:
+```bash
+docker build -t heimdall-cache .
+docker run -p 8000:8000 -e TAVILY_API_KEY="tvly-..." heimdall-cache
+```
+
+### 3. Vercel Serverless
+Deploy instantly using Vercel CLI:
+```bash
+vercel
+```
+Configured via `pyproject.toml` with `tool.vercel.entrypoint = "main:app"`.
 
 ---
 

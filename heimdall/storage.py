@@ -9,8 +9,11 @@ from .models import CacheEntry, Claim
 
 logger = logging.getLogger("heimdall.storage")
 
-# Use /tmp on Vercel/serverless environments where app root is read-only
-if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+# Check configurable path or serverless read-only fallbacks
+custom_path = os.environ.get("HEIMDALL_DB_PATH")
+if custom_path:
+    DB_PATH = Path(custom_path)
+elif os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
     DB_PATH = Path(tempfile.gettempdir()) / "heimdall_cache.db"
 else:
     DB_PATH = Path(__file__).resolve().parent.parent / "heimdall_cache.db"
@@ -19,6 +22,11 @@ class SQLiteVectorStorage:
     def __init__(self, db_path: Path = DB_PATH):
         self.db_path = str(db_path)
         try:
+            self._init_db()
+        except sqlite3.OperationalError:
+            # Fallback to temp directory if host filesystem is read-only
+            fallback = Path(tempfile.gettempdir()) / "heimdall_cache.db"
+            self.db_path = str(fallback)
             self._init_db()
         except Exception as e:
             logger.error(f"Failed to initialize SQLite at {self.db_path}: {e}")

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: heimdall-cache
+    runtime: python
+    region: oregon
+    plan: free
+    branch: master
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn heimdall.app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/metrics
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: BIFROST_UPSTREAM_URL
+        value: https://api.openai.com/v1
