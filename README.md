@@ -57,46 +57,217 @@ HeimdallCache delivers a single, cohesive architecture addressing both mandatory
 
 ## ⚡ The Problem: Why Static Semantic Caches Fail
 
-AI Gateways like Bifrost save immense token costs and provide sub-millisecond latency using Semantic Caching. However, **standard semantic caches are static**:
+AI Gateways like Bifrost save immense token costs and provide sub-millisecond latency using Semantic Caching. However, **standard semantic caches are temporally blind**:
 
-1. A user queries: *"What is the monthly pricing for Twitter X Premium?"*
-2. The gateway calls the LLM, gets: `"$8 per month"`, and caches the vector with a 0.95 similarity radius.
-3. Three months later, pricing increases to `$16/mo` or `$22/mo`.
-4. Another user asks the same question. The gateway detects high vector similarity and **confidently serves the outdated, wrong answer forever**.
+```
+TRADITIONAL STATIC CACHE (Vulnerable to Silent Hallucination):
+Day 1: "Twitter X Premium cost?" ────► LLM answers "$8/mo" ────► Vector stored in cache
+Day 90: Pricing changes to $16/mo in the real world 🌐
+Day 120: "Twitter X cost per month?" ─► 98% Vector Match ─────► ❌ SILENTLY SERVES STALE $8/mo!
 
-**HeimdallCache fixes this by turning static vector storage into an active, living memory.**
+HEIMDALL LIVING SEMANTIC CACHE (Self-Healing via Tavily Grounding):
+Day 1: "Twitter X Premium cost?" ────► Stored with HIGH Volatility tag (3-day half-life)
+Day 90: Pricing changes to $16/mo in the real world 🌐
+Day 120: "Twitter X cost per month?" ─► 98% Vector Match detected
+                                          │
+                                          ├─► 🔍 Targeted Tavily Delta-Probe (time_range="month")
+                                          ├─► ⚡ 2-Tier Contradiction Engine ($8 cached vs $16 web)
+                                          ├─► 🚨 Drift Detected (Freshness drops to 30.0%)
+                                          ├─► 🔄 Decayed Vector Evicted & Upstream Re-grounded
+                                          └─► ✅ SERVES VERIFIED $16/mo WITH LIVE WEB CITATIONS!
+```
 
 ---
 
-## 📐 Architecture & Workflow
+## 📐 Enterprise Architecture Topology
+
+HeimdallCache seamlessly bridges client applications, edge routing, real-time web intelligence, and the open-source Bifrost AI Gateway:
 
 ```mermaid
 flowchart TD
-    Client["Client / Application"] -->|"POST /v1/chat/completions"| Proxy["HeimdallCache Proxy Engine"]
+    subgraph Clients ["Client Applications & SDKs"]
+        OpenAIClient["OpenAI SDK Clients"]
+        LangChainApp["LangChain / LlamaIndex"]
+        CurlTerminal["cURL / Webhook Consumers"]
+    end
+
+    subgraph Edge ["Vercel Global Edge Network"]
+        VercelCDN["Vercel Edge Proxy (heimdall-cache.vercel.app)"]
+        EdgeRewrites["Edge URL Rewrites (/v1/*, /api/*)"]
+    end
+
+    subgraph Core ["HeimdallCache Living Gateway Core (Render)"]
+        ProxyEngine["Proxy Ingestion Engine (/v1/chat/completions)"]
+        Streamer["SSE Token Streamer (stream: true)"]
+        
+        subgraph LivingMemory ["Living Vector Memory Engine"]
+            SQLiteStore[("SQLite WAL Vector Store (Durable Persistence)")]
+            CosineMatch["Zero-Dependency Cosine Matcher (Threshold: 0.85)"]
+            VolatilityRouter{"Entity Volatility Router"}
+        end
+        
+        subgraph ContradictionEngine ["2-Tier Contradiction Engine"]
+            Tier1["Tier 1: Deterministic Delta Extraction (Regex: $, %, vX.Y)"]
+            Tier2["Tier 2: Semantic NLI Alignment (Cosine to Web Answer)"]
+            Scorer["Dynamic Freshness Scoring (0 - 100%)"]
+        end
+    end
+
+    subgraph WebIntelligence ["Real-Time Web Intelligence"]
+        TavilyAPI["Tavily Search API (time_range='month', advanced)"]
+        LiveSources["Live Web Ground Truth & Citations"]
+    end
+
+    subgraph Gateway ["Maxim AI Bifrost Gateway"]
+        Bifrost["Bifrost Gateway (ghcr.io/maximhq/bifrost:latest)"]
+        LoadBalancer["Multi-LLM Router & Failover Engine"]
+    end
+
+    subgraph LLMProviders ["Foundation LLM Providers"]
+        OpenAI["OpenAI (GPT-4o, o3-mini)"]
+        Anthropic["Anthropic (Claude 3.5 Sonnet)"]
+        Gemini["Google (Gemini 2.0 Flash)"]
+    end
+
+    Clients -->|"POST /v1/chat/completions"| VercelCDN
+    VercelCDN --> EdgeRewrites
+    EdgeRewrites -->|"Sub-millisecond Proxy"| ProxyEngine
     
-    Proxy -->|"Cosine Similarity Match"| VectorEngine["Vector Similarity Engine"]
+    ProxyEngine --> CosineMatch
+    CosineMatch <--> SQLiteStore
     
-    VectorEngine -->|"Similarity >= 0.85"| VolatilityRouter{"Entity Volatility Router"}
-    VectorEngine -->|"Similarity < 0.85"| Miss["Cache Miss Flow"]
+    CosineMatch -->|"Sim >= 0.85"| VolatilityRouter
+    VolatilityRouter -->|"STATIC: Math, Theory"| InstantHit["⚡ Instant Cache Hit (< 5ms)"]
+    VolatilityRouter -->|"VOLATILE: Pricing, APIs, News"| TavilyAPI
     
-    VolatilityRouter -->|"STATIC (Math, Theory)"| FastHit["⚡ Instant Cache Hit (< 5ms)"]
-    VolatilityRouter -->|"HIGH / MODERATE (Pricing, APIs, People)"| TavilyProbe["🔍 Tavily Delta-Probe Engine"]
+    TavilyAPI --> LiveSources
+    LiveSources --> ContradictionEngine
+    Tier1 --> Scorer
+    Tier2 --> Scorer
     
-    TavilyProbe -->|"Execute Live Web Probe"| TavilyAPI["Tavily Search API"]
-    TavilyAPI -->|"Return Real-Time Sources & Snippets"| TavilyProbe
+    Scorer -->|"Freshness >= 70%"| LivingHit["✅ Verified Living Hit (< 15ms)"]
+    Scorer -->|"Freshness < 70% (Drift!)"| HotInvalidate["🚨 Hot Invalidate & Evict Vector"]
     
-    TavilyProbe -->|"Compute Freshness Score"| DriftCheck{"Freshness < 70%?"}
+    CosineMatch -->|"Sim < 0.85 (Miss)"| Bifrost
+    HotInvalidate -->|"Re-ground Query"| Bifrost
     
-    DriftCheck -->|"No (Data Still Fresh)"| VerifiedHit["✅ Verified Living Hit (< 5ms)"]
-    DriftCheck -->|"Yes (Drift Detected!)"| Invalidate["🚨 Hot Invalidate & Evict Decayed Vector"]
+    Bifrost --> LoadBalancer
+    LoadBalancer --> LLMProviders
     
-    Invalidate -->|"Fetch Ground Truth"| Upstream["Bifrost Gateway / Upstream LLM"]
-    Miss --> Upstream
+    LLMProviders -->|"Fresh Response"| Bifrost
+    Bifrost -->|"Store Fresh Vector"| SQLiteStore
     
-    Upstream -->|"Re-ground & Cache Fresh Vector"| CacheStore["Living Cache Store"]
-    CacheStore -->|"Return Fresh Verified Response"| Client
-    FastHit --> Client
-    VerifiedHit --> Client
+    InstantHit --> Streamer
+    LivingHit --> Streamer
+    Bifrost --> Streamer
+    Streamer -->|"HTTP / SSE Stream"| Clients
+```
+
+---
+
+## 🔄 Lifecycle of a Stale Query: Step-by-Step
+
+The following sequence illustrates how HeimdallCache intercepts a query with decaying factual accuracy, catches the conflict, and self-heals without user downtime:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as Client Application
+    participant Proxy as Heimdall Gateway Proxy
+    participant Cache as SQLite Vector Storage
+    participant Tavily as Tavily Search Engine
+    participant Bifrost as Maxim Bifrost Gateway
+    participant LLM as Upstream LLM (OpenAI)
+
+    Client->>Proxy: POST /v1/chat/completions ("Twitter X Premium price?")
+    Proxy->>Cache: Lookup prompt embedding (Cosine similarity)
+    Cache-->>Proxy: Match found: Vector #083e8fe3 (Sim: 0.95, Stored: "$8/mo")
+    
+    Note over Proxy: Volatility Classifier flags topic as PRICING (Half-life: 3 days)
+    
+    Proxy->>Tavily: Targeted Delta-Probe (query: "Twitter X Premium pricing current fee")
+    Tavily-->>Proxy: Live Web Consensus ("Twitter X is now tiered at $3, $8, and $16/mo")
+    
+    Note over Proxy: Tier 1 NLI detects numeric divergence ($8 claimed vs $16 live)
+    Note over Proxy: Freshness drops to 30.0% (< 70% Threshold)
+    
+    Proxy->>Cache: Evict decayed vector #083e8fe3 (Status: EVICTED)
+    Proxy->>Bifrost: Forward re-grounded query for fresh generation
+    Bifrost->>LLM: Upstream chat completion
+    LLM-->>Bifrost: Fresh verified response ($16/month for Premium+)
+    Bifrost-->>Proxy: Return fresh payload
+    
+    Proxy->>Cache: Store fresh vector with updated Tavily citations
+    Proxy-->>Client: 200 OK + Verified Response + Sources Header
+    Note over Client: Headers: X-Bifrost-Cache-Status: STALE_INVALIDATED, X-Heimdall-Freshness-Score: 94.0%
+```
+
+---
+
+## 🧠 The 2-Tier Contradiction Engine
+
+HeimdallCache evaluates factual integrity using an asymmetric two-tier contradiction pipeline to prevent false-positive evictions while capturing subtle semantic drifts:
+
+```mermaid
+flowchart LR
+    CachedClaim["Cached Claim: 'Twitter Premium is $8/mo'"] --> Extractor["Claim Decomposition"]
+    LiveEvidence["Tavily Search: '$3 Basic, $8 Premium, $16 Premium+'"] --> Extractor
+
+    subgraph Tier1 ["Tier 1: Deterministic Delta Extraction"]
+        RegexPrice["Regex Currency Parser: \\$([0-9.]+)"]
+        RegexVersion["Regex Version Parser: v?([0-9]+\\.[0-9]+)"]
+        HardConflict{"Hard Numeric Conflict?"}
+        RegexPrice --> HardConflict
+        RegexVersion --> HardConflict
+    end
+
+    subgraph Tier2 ["Tier 2: Directional Semantic NLI"]
+        ClaimVec["Vector Embed (Claim)"]
+        AnswerVec["Vector Embed (Tavily Synthesis)"]
+        CosineNLI["Directional Cosine Similarity"]
+        ClaimVec --> CosineNLI
+        AnswerVec --> CosineNLI
+        DivergenceCheck{"Semantic Alignment < 0.35?"}
+        CosineNLI --> DivergenceCheck
+    end
+
+    Extractor --> Tier1
+    HardConflict -->|"Direct Value Mismatch"| FlagStale["🚨 Freshness: 30-35% (Flagged Stale)"]
+    HardConflict -->|"No Direct Mismatch"| Tier2
+    
+    DivergenceCheck -->|"Yes: Conceptual Drift"| FlagStale
+    DivergenceCheck -->|"No: High Entailment (> 0.70)"| FlagHealthy["✅ Freshness: 94-98% (Healthy)"]
+
+    FlagStale --> Decision{"Freshness < 70%?"}
+    FlagHealthy --> Decision
+    Decision -->|"Yes"| Evict["Hot Invalidate & Evict"]
+    Decision -->|"No"| Serve["Serve Living Cache Hit (< 5ms)"]
+```
+
+---
+
+## 📟 Live Gateway Operator Console (ASCII Telemetry)
+
+When accessing the live gateway at **[https://heimdall-cache.vercel.app/](https://heimdall-cache.vercel.app/)**, operators monitor live vector health, token avoidance, and radar sweeps in real time:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│  HEIMDALL LIVING SEMANTIC RADAR // STATUS: OPERATIONAL // VERCEL ➔ RENDER CONNECTED   │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                        │
+│   TOTAL REQUESTS        CACHE HIT RATE         STALE INVALIDATIONS     TOKENS SAVED    │
+│       1,428                66.0%                       186                742,910      │
+│   [Sub-millisecond]    [Fast Path <5ms]        [Drift Caught]          [$0 Liability]  │
+│                                                                                        │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│  LIVING VECTOR MEMORY MATRIX                                                           │
+│  ID          PROMPT                              VOLATILITY   FRESHNESS   STATUS       │
+│  ────────────────────────────────────────────────────────────────────────────────────  │
+│  vec_083e8   "Twitter X Premium pricing..."      HIGH (3d)    94.0%       HEALTHY 🟢   │
+│  vec_65e7e   "QuickSort time complexity..."      STATIC (∞)   100.0%      HEALTHY 🟢   │
+│  vec_b49f2   "LangChain Community imports..."    MODERATE     35.0%       EVICTED 🚨   │
+│  vec_91a0c   "Next.js App Router metadata..."    MODERATE     92.0%       HEALTHY 🟢   │
+└────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -187,7 +358,21 @@ Deploy instantly using Vercel CLI:
 ```bash
 vercel
 ```
-Configured via `pyproject.toml` with `tool.vercel.entrypoint = "main:app"`.
+Configured via `pyproject.toml` with `tool.vercel.entrypoint = "main:app"` and edge rewrites in `vercel.json`.
+
+### 4. Turnkey Docker Compose (HeimdallCache + Maxim AI Bifrost Gateway)
+Spin up both the Heimdall living cache and the official Maxim AI Bifrost gateway sidecar with a single command:
+
+```mermaid
+flowchart LR
+    Client["Client Application"] -->|"POST :8000/v1"| Heimdall["heimdall-cache (:8000)<br/>Living Semantic Cache"]
+    Heimdall -->|"Cache Miss / Invalidation (:8080)"| Bifrost["bifrost-gateway (:8080)<br/>ghcr.io/maximhq/bifrost"]
+    Bifrost -->|"Upstream Provider"| CloudLLM["OpenAI / Anthropic / Gemini"]
+```
+
+```bash
+docker compose up -d
+```
 
 ---
 
