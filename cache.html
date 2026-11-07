@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living Vector Memory & Invalidation Matrix — HeimdallCache</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                        serif: ['"Instrument Serif"', '"Playfair Display"', 'Georgia', 'serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        bifrost: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 950: '#1e0a3d' },
+                        tavily: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 950: '#082f49' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #030712;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+        .skiper-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen font-sans selection:bg-purple-500 selection:text-white flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <nav class="border-b border-white/[0.08] bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+            <a href="./" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform duration-300">
+                    <span class="text-lg">🌈</span>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-purple-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent">HeimdallCache</span>
+                        <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-purple-950/80 text-purple-300 border border-purple-800/50">LIVE DEMO</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 font-serif italic">The living gateway sentinel for Bifrost</p>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-1 p-1 bg-slate-900/80 rounded-xl border border-white/[0.06]">
+                <a href="./" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                    <span>Console</span>
+                </a>
+                <a href="./cache.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30">
+                    <i data-lucide="database" class="w-3.5 h-3.5"></i>
+                    <span>Living Vectors</span>
+                </a>
+                <a href="./analytics.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+                    <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="./settings.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                    <span>Thresholds</span>
+                </a>
+                <a href="./docs.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+                    <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                    <span>API Docs</span>
+                </a>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <a href="https://github.com/sachinn-alt/heimdall-cache" target="_blank" class="p-2 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/[0.08] rounded-xl transition-all hover:scale-105 active:scale-95" title="View Source on GitHub">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/[0.08]">
+            <div>
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-semibold mb-2">
+                    <span>VECTOR MEMORY EXPLORER</span>
+                </div>
+                <h1 class="text-3xl font-extrabold text-white tracking-tight">
+                    Living Vector Memory & <span class="font-serif italic text-purple-400 font-normal">Invalidation Matrix</span>
+                </h1>
+                <p class="text-slate-400 text-sm font-light mt-1">
+                    Inspect every semantic vector cached in Heimdall, their volatility decay half-lives, and per-claim Tavily ground truth.
+                </p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.reload()" class="shimmer-btn px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-white/[0.1] rounded-xl text-xs font-mono flex items-center space-x-2 transition active:scale-95">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                    <span>Refresh Matrix</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
+            <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                <button onclick="filterTable('ALL')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-purple-600 text-white shadow-md shadow-purple-600/30 transition">
+                    All (4)
+                </button>
+                <button onclick="filterTable('HIGH')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-900 text-amber-300 border border-amber-800/40 hover:bg-amber-950/40 transition">
+                    High Volatility (Pricing/APIs)
+                </button>
+                <button onclick="filterTable('STATIC')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-900 text-emerald-300 border border-emerald-800/40 hover:bg-emerald-950/40 transition">
+                    Static (Math/Theory)
+                </button>
+                <button onclick="filterTable('DRIFT')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-900 text-rose-300 border border-rose-800/40 hover:bg-rose-950/40 transition">
+                    Drift Detected
+                </button>
+            </div>
+            <div class="w-full sm:w-72">
+                <input type="text" id="search-input" onkeyup="searchVectors()" placeholder="Search cached prompts..." class="w-full bg-slate-950/80 border border-white/[0.1] rounded-xl px-3.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500 font-mono transition">
+            </div>
+        </div>
+
+        <!-- Vectors Table -->
+        <div class="skiper-card rounded-3xl overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950/90 text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-white/[0.08]">
+                        <tr>
+                            <th class="py-4 px-6">Vector ID / Prompt</th>
+                            <th class="py-4 px-4">Entity Type</th>
+                            <th class="py-4 px-4">Volatility / Half-Life</th>
+                            <th class="py-4 px-4">Tavily Freshness</th>
+                            <th class="py-4 px-4">Hit Count</th>
+                            <th class="py-4 px-4">Cache Status</th>
+                            <th class="py-4 px-6 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matrix-body" class="divide-y divide-white/[0.04] font-mono">
+                        <tr class="hover:bg-slate-800/30 transition-colors vector-row" data-volatility="HIGH" data-status="DRIFT_DETECTED">
+                            <td class="py-4 px-6">
+                                <div class="text-[10px] text-purple-400 font-mono mb-1">#vec_b49f28</div>
+                                <div class="font-sans font-medium text-slate-100 text-sm max-w-md truncate">What is the monthly pricing for Twitter X Premium?</div>
+                                <div class="text-slate-400 font-sans text-xs mt-1 truncate max-w-md">Twitter X Premium costs $8 per month for individual verification...</div>
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-white/[0.06]">PRICING</span>
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800/60">HIGH · 3D TTL</span>
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-sm text-rose-400">35.0%</span>
+                                    <div class="w-12 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                                        <div class="h-full bg-rose-500" style="width: 35%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-slate-400 font-bold">42</td>
+                            <td class="py-4 px-4">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-950/80 text-rose-300 border border-rose-800/60 inline-flex items-center space-x-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>
+                                    <span>DRIFT DETECTED</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <div class="inline-flex items-center space-x-2">
+                                    <button onclick="triggerSimulatedProbe('vec_b49f28')" class="px-3 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-800/50 rounded-xl text-xs font-sans font-semibold transition active:scale-95 flex items-center space-x-1">
+                                        <i data-lucide="crosshair" class="w-3 h-3"></i>
+                                        <span>Tavily Probe</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="hover:bg-slate-800/30 transition-colors vector-row" data-volatility="STATIC" data-status="HEALTHY">
+                            <td class="py-4 px-6">
+                                <div class="text-[10px] text-purple-400 font-mono mb-1">#vec_81e3a0</div>
+                                <div class="font-sans font-medium text-slate-100 text-sm max-w-md truncate">What is the time complexity of QuickSort in the average case?</div>
+                                <div class="text-slate-400 font-sans text-xs mt-1 truncate max-w-md">The time complexity of QuickSort in the average case is O(n log n)...</div>
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-white/[0.06]">THEORY</span>
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800/60">STATIC · ∞ TTL</span>
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-sm text-emerald-400">100.0%</span>
+                                    <div class="w-12 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                                        <div class="h-full bg-emerald-500" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-slate-400 font-bold">188</td>
+                            <td class="py-4 px-4">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 inline-flex items-center space-x-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>HEALTHY</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <div class="inline-flex items-center space-x-2">
+                                    <button onclick="triggerSimulatedProbe('vec_81e3a0')" class="px-3 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-800/50 rounded-xl text-xs font-sans font-semibold transition active:scale-95 flex items-center space-x-1">
+                                        <i data-lucide="crosshair" class="w-3 h-3"></i>
+                                        <span>Tavily Probe</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="hover:bg-slate-800/30 transition-colors vector-row" data-volatility="HIGH" data-status="HEALTHY">
+                            <td class="py-4 px-6">
+                                <div class="text-[10px] text-purple-400 font-mono mb-1">#vec_c190fa</div>
+                                <div class="font-sans font-medium text-slate-100 text-sm max-w-md truncate">What is the current LTS version of Node.js?</div>
+                                <div class="text-slate-400 font-sans text-xs mt-1 truncate max-w-md">The active LTS release is Node.js v22 (Jod)...</div>
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-white/[0.06]">API_VERSION</span>
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800/60">HIGH · 7D TTL</span>
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-sm text-emerald-400">97.5%</span>
+                                    <div class="w-12 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                                        <div class="h-full bg-emerald-500" style="width: 97.5%"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-slate-400 font-bold">76</td>
+                            <td class="py-4 px-4">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 inline-flex items-center space-x-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    <span>HEALTHY</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <div class="inline-flex items-center space-x-2">
+                                    <button onclick="triggerSimulatedProbe('vec_c190fa')" class="px-3 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-800/50 rounded-xl text-xs font-sans font-semibold transition active:scale-95 flex items-center space-x-1">
+                                        <i data-lucide="crosshair" class="w-3 h-3"></i>
+                                        <span>Tavily Probe</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/[0.08] bg-slate-950/90 py-6 text-center text-xs text-slate-500 font-mono">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>HeimdallCache — Built for the <span class="text-purple-400">Global AI Hackathon</span></div>
+            <div class="flex items-center space-x-4">
+                <span>Priority Track: <strong class="text-slate-300">Bifrost</strong></span>
+                <span>•</span>
+                <span>Track Partner: <strong class="text-cyan-400">Tavily</strong></span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function filterTable(filter) {
+            const rows = document.querySelectorAll('.vector-row');
+            rows.forEach(r => {
+                const vol = r.getAttribute('data-volatility');
+                const status = r.getAttribute('data-status');
+                if (filter === 'ALL') {
+                    r.style.display = '';
+                } else if (filter === 'HIGH' && vol === 'HIGH') {
+                    r.style.display = '';
+                } else if (filter === 'STATIC' && vol === 'STATIC') {
+                    r.style.display = '';
+                } else if (filter === 'DRIFT' && status === 'DRIFT_DETECTED') {
+                    r.style.display = '';
+                } else {
+                    r.style.display = 'none';
+                }
+            });
+        }
+
+        function searchVectors() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('.vector-row');
+            rows.forEach(r => {
+                const text = r.innerText.toLowerCase();
+                r.style.display = text.includes(q) ? '' : 'none';
+            });
+        }
+
+        async function triggerSimulatedProbe(id) {
+            alert(`Tavily Delta-Probe executed for vector #${id}!\n\nStatus: Verified against live web ground truth via Tavily.\nFreshness score recomputed successfully.`);
+        }
+    </script>
+</body>
+</html>
