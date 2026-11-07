@@ -10,12 +10,32 @@
 [![Deploy to Render](https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/sachinn-alt/heimdall-cache)
 [![Live on GitHub Pages](https://img.shields.io/badge/Live_Showcase-GitHub_Pages-8b5cf6?style=for-the-badge&logo=github)](https://sachinn-alt.github.io/heimdall-cache/)
 
-> 🚀 **Live Interactive Deployments:**
-> - **Full Backend & API Gateway on Vercel:** [https://swift-crater-u0h1f6i.tmp.now/](https://swift-crater-u0h1f6i.tmp.now/)
-> - **Interactive Pitch Deck:** [https://swift-crater-u0h1f6i.tmp.now/pitch](https://swift-crater-u0h1f6i.tmp.now/pitch) *(or [GitHub Pages Pitch](https://sachinn-alt.github.io/heimdall-cache/pitch.html))*
-> - **Client-Side Visual Showcase:** [https://sachinn-alt.github.io/heimdall-cache/](https://sachinn-alt.github.io/heimdall-cache/)
-> - **1-Click Turnkey Deploy on Render:**  
->   [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sachinn-alt/heimdall-cache)
+---
+
+## 🌐 Live Deployments & Application Directory
+
+Experience HeimdallCache across production serverless, turnkey container, or client-side showcase environments:
+
+| Target | Deployment Role | Live URL | Status |
+|---|---|---|---|
+| **Vercel** | **Full Backend & API Gateway (Live)** | [https://swift-crater-u0h1f6i.tmp.now/](https://swift-crater-u0h1f6i.tmp.now/) | `🟢 Operational` |
+| **Pitch Deck** | **In-Browser Interactive Slides** | [https://swift-crater-u0h1f6i.tmp.now/pitch](https://swift-crater-u0h1f6i.tmp.now/pitch) | `🟢 Operational` |
+| **GitHub Pages** | **Client-Side Visual Showcase** | [https://sachinn-alt.github.io/heimdall-cache/](https://sachinn-alt.github.io/heimdall-cache/) | `🟢 Operational` |
+| **Render** | **1-Click Turnkey Cloud Service** | [Deploy to Render Button](https://render.com/deploy?repo=https://github.com/sachinn-alt/heimdall-cache) | `🟢 Blueprint Ready` |
+| **Swagger UI** | **Interactive OpenAPI Specification** | [https://swift-crater-u0h1f6i.tmp.now/swagger](https://swift-crater-u0h1f6i.tmp.now/swagger) | `🟢 Operational` |
+
+### 📑 Multi-Page Application Directory
+
+| View | Purpose | Live Vercel Endpoint | Static GitHub Pages |
+|---|---|---|---|
+| **Radar & Console** | Real-time query playground & live telemetry sweep | [`/`](https://swift-crater-u0h1f6i.tmp.now/) | [`index.html`](https://sachinn-alt.github.io/heimdall-cache/index.html) |
+| **Vector Matrix** | Living vector memory table with volatility badges & invalidations | [`/cache`](https://swift-crater-u0h1f6i.tmp.now/cache) | [`cache.html`](https://sachinn-alt.github.io/heimdall-cache/cache.html) |
+| **Economics Hub** | Enterprise ROI calculator and token savings metrics | [`/analytics`](https://swift-crater-u0h1f6i.tmp.now/analytics) | [`analytics.html`](https://sachinn-alt.github.io/heimdall-cache/analytics.html) |
+| **Control Plane** | Cosine similarity & Tavily freshness thresholds | [`/settings`](https://swift-crater-u0h1f6i.tmp.now/settings) | [`settings.html`](https://sachinn-alt.github.io/heimdall-cache/settings.html) |
+| **API Docs** | Interactive SDK snippets, curl examples, and schema | [`/docs`](https://swift-crater-u0h1f6i.tmp.now/docs) | [`docs.html`](https://sachinn-alt.github.io/heimdall-cache/docs.html) |
+| **Pitch Deck** | 6-slide presentation deck with speaker notes (`N`) | [`/pitch`](https://swift-crater-u0h1f6i.tmp.now/pitch) | [`pitch.html`](https://sachinn-alt.github.io/heimdall-cache/pitch.html) |
+
+---
 
 HeimdallCache is an enterprise-grade living semantic cache middleware and proxy extension designed for the open-source **Bifrost AI Gateway** (`maximhq/bifrost`). It eliminates the critical vulnerability of traditional LLM caching—**factual staleness, cache rot, and silent hallucination**—by combining vector similarity search with automated entity volatility classification and real-time **Tavily Search** delta-probes.
 
@@ -170,14 +190,16 @@ Configured via `pyproject.toml` with `tool.vercel.entrypoint = "main:app"`.
 
 ## 🔌 Using with Any OpenAI or Bifrost Client
 
-Simply change your client's `base_url` to HeimdallCache:
+Simply change your client's `base_url` to HeimdallCache (either your local instance or the live Vercel gateway):
 
+### Python (OpenAI SDK)
 ```python
 from openai import OpenAI
 
+# Connect to the live deployed HeimdallCache gateway (or http://localhost:8000/v1)
 client = OpenAI(
-    base_url="http://localhost:8000/v1",
-    api_key="none"  # Heimdall handles upstream routing
+    base_url="https://swift-crater-u0h1f6i.tmp.now/v1",
+    api_key="none"  # Upstream keys managed securely by Heimdall
 )
 
 response = client.chat.completions.create(
@@ -186,6 +208,16 @@ response = client.chat.completions.create(
 )
 
 print(response.choices[0].message.content)
+```
+
+### cURL (Instant Terminal Test)
+```bash
+curl -X POST "https://swift-crater-u0h1f6i.tmp.now/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "messages": [{"role": "user", "content": "What is the monthly pricing for Twitter X Premium?"}]
+  }'
 ```
 
 ---
@@ -198,21 +230,35 @@ heimdall-cache/
 │   ├── config.py           # Configuration & Volatility TTL settings
 │   ├── models.py           # Pydantic schemas (Claims, Vectors, OpenAI requests)
 │   ├── embeddings.py       # Zero-dependency local vector similarity engine
+│   ├── storage.py          # SQLite durable vector persistence & serverless /tmp fallback
 │   ├── volatility.py       # Entity & Volatility Classifier
-│   ├── tavily_probe.py     # Tavily Delta-Probe & Freshness Scoring Engine
+│   ├── tavily_probe.py     # 2-Tier Tavily NLI & Freshness Scoring Engine
 │   ├── living_cache.py     # Living Semantic Cache with half-life decay & eviction
-│   ├── proxy.py            # Bifrost & OpenAI reverse-proxy pipeline
-│   └── app.py              # FastAPI server & REST API
+│   ├── proxy.py            # Bifrost & OpenAI reverse-proxy pipeline (with SSE streaming)
+│   └── app.py              # FastAPI server & multi-page router
 ├── dashboard/
-│   └── templates/
-│       └── index.html      # Dark-mode operator dashboard with live radar
+│   └── templates/          # Skiper UI & ReactBits Jinja2 template components
+│       ├── base.html       # Shared glassmorphic layout & navigation
+│       ├── index.html      # Live Gateway Radar & Telemetry
+│       ├── cache.html      # Living Vector Memory Matrix
+│       ├── analytics.html  # Economics Hub & ROI Simulator
+│       ├── settings.html   # Control plane & threshold tuning
+│       ├── docs.html       # Interactive API Documentation
+│       └── pitch.html      # Interactive 6-slide presentation deck
+├── docs/                   # GitHub Pages static showcase deployment
+├── tests/
+│   └── test_pages.py       # Automated verification test suite
 ├── benchmark/
 │   └── run_benchmark.py    # Head-to-head comparison benchmark script
 ├── submission/
 │   ├── PRESENTATION.md     # Pitch deck slide structure for PPT
 │   └── DEMO_SCRIPT.md      # 2-minute video walkthrough script
-├── run.py                  # One-command startup launcher
-└── requirements.txt        # Dependencies
+├── render.yaml             # Render infrastructure-as-code blueprint
+├── Dockerfile              # Production Debian slim container image
+├── pyproject.toml          # Package metadata & Vercel entrypoint
+├── main.py                 # Vercel serverless application entrypoint
+├── run.py                  # Local startup launcher
+└── requirements.txt        # Python package dependencies
 ```
 
 ---
