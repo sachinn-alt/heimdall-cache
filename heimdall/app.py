@@ -2,6 +2,7 @@ import os
 import time
 from pathlib import Path
 from fastapi import FastAPI, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -23,6 +24,15 @@ app = FastAPI(
     version="1.3.0",
     docs_url="/swagger",
     redoc_url="/redoc",
+)
+
+# Enable universal CORS for seamless Vercel, GitHub Pages, and multi-cloud interconnection
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 if STATIC_DIR.exists():

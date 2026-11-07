@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/v1/(.*)",
+      "destination": "https://heimdall-cache.onrender.com/v1/$1"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "https://heimdall-cache.onrender.com/api/$1"
+    }
+  ]
+}

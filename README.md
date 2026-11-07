@@ -18,11 +18,14 @@ Experience HeimdallCache across production serverless, turnkey container, or cli
 
 | Target | Deployment Role | Live URL | Status |
 |---|---|---|---|
-| **Vercel** | **Full Backend & API Gateway (Live)** | [https://swift-crater-u0h1f6i.tmp.now/](https://swift-crater-u0h1f6i.tmp.now/) | `🟢 Operational` |
-| **Pitch Deck** | **In-Browser Interactive Slides** | [https://swift-crater-u0h1f6i.tmp.now/pitch](https://swift-crater-u0h1f6i.tmp.now/pitch) | `🟢 Operational` |
+| **Render Core** | **Dedicated Living Vector Gateway** | [https://heimdall-cache.onrender.com/](https://heimdall-cache.onrender.com/) | `🟢 Live & Operational` |
+| **Vercel Edge** | **Edge Router & UI (Proxied to Render)** | [https://swift-crater-u0h1f6i.tmp.now/](https://swift-crater-u0h1f6i.tmp.now/) | `🟢 Live & Connected` |
+| **Pitch Deck** | **In-Browser Interactive Slides** | [https://heimdall-cache.onrender.com/pitch](https://heimdall-cache.onrender.com/pitch) | `🟢 Live Presentation` |
 | **GitHub Pages** | **Client-Side Visual Showcase** | [https://sachinn-alt.github.io/heimdall-cache/](https://sachinn-alt.github.io/heimdall-cache/) | `🟢 Operational` |
-| **Render** | **1-Click Turnkey Cloud Service** | [Deploy to Render Button](https://render.com/deploy?repo=https://github.com/sachinn-alt/heimdall-cache) | `🟢 Blueprint Ready` |
-| **Swagger UI** | **Interactive OpenAPI Specification** | [https://swift-crater-u0h1f6i.tmp.now/swagger](https://swift-crater-u0h1f6i.tmp.now/swagger) | `🟢 Operational` |
+| **Swagger UI** | **Interactive OpenAPI Specification** | [https://heimdall-cache.onrender.com/swagger](https://heimdall-cache.onrender.com/swagger) | `🟢 Interactive Docs` |
+
+> 🔗 **Connected Edge Architecture:**  
+> Vercel is connected directly to the Render backend via edge rewrites (`vercel.json`). Any request sent to Vercel's `/v1/chat/completions` or `/api/metrics` is automatically proxied with sub-millisecond edge routing to the persistent Render Living Cache cluster at `https://heimdall-cache.onrender.com`!
 
 ### 📑 Multi-Page Application Directory
 
@@ -196,9 +199,9 @@ Simply change your client's `base_url` to HeimdallCache (either your local insta
 ```python
 from openai import OpenAI
 
-# Connect to the live deployed HeimdallCache gateway (or http://localhost:8000/v1)
+# Connect to the live HeimdallCache gateway (Render backend or Vercel edge)
 client = OpenAI(
-    base_url="https://swift-crater-u0h1f6i.tmp.now/v1",
+    base_url="https://heimdall-cache.onrender.com/v1",  # or https://swift-crater-u0h1f6i.tmp.now/v1
     api_key="none"  # Upstream keys managed securely by Heimdall
 )
 
@@ -212,6 +215,15 @@ print(response.choices[0].message.content)
 
 ### cURL (Instant Terminal Test)
 ```bash
+# Query the live Render Backend directly:
+curl -X POST "https://heimdall-cache.onrender.com/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "messages": [{"role": "user", "content": "What is the monthly pricing for Twitter X Premium?"}]
+  }'
+
+# Or query through the Vercel Edge Proxy:
 curl -X POST "https://swift-crater-u0h1f6i.tmp.now/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -d '{
