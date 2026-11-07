@@ -6,6 +6,10 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Bifrost Gateway Compatible](https://img.shields.io/badge/Bifrost-Compatible-8b5cf6.svg)](https://github.com/maximhq/bifrost)
 [![Tavily Powered](https://img.shields.io/badge/Tavily-Grounding_Active-06b6d4.svg)](https://tavily.com)
+[![Live Demo on GitHub Pages](https://img.shields.io/badge/Live_Demo-GitHub_Pages-8b5cf6?style=for-the-badge&logo=github)](https://sachinn-alt.github.io/heimdall-cache/)
+
+> 🌐 **Try the Live Interactive Multi-Page Demo on GitHub Pages:**  
+> **[https://sachinn-alt.github.io/heimdall-cache/](https://sachinn-alt.github.io/heimdall-cache/)**
 
 HeimdallCache is an enterprise-grade living semantic cache middleware and proxy extension designed for the open-source **Bifrost AI Gateway** (`maximhq/bifrost`). It eliminates the critical vulnerability of traditional LLM caching—**factual staleness, cache rot, and silent hallucination**—by combining vector similarity search with automated entity volatility classification and real-time **Tavily Search** delta-probes.
 
