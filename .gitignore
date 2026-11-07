@@ -29,9 +29,13 @@ wheels/
 
 # Cache & logs
 *.log
+*.db
+heimdall_cache.db
 .cache
 .pytest_cache/
 
 # OS
 .DS_Store
 Thumbs.db
+
+.vercel

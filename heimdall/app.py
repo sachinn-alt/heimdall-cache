@@ -2,7 +2,7 @@ import os
 import time
 from pathlib import Path
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -20,7 +20,7 @@ STATIC_DIR = DASHBOARD_DIR / "static"
 app = FastAPI(
     title="HeimdallCache Gateway",
     description="The All-Seeing Living Semantic Cache for Bifrost Gateway, Powered by Tavily",
-    version="1.2.0",
+    version="1.3.0",
     docs_url="/swagger",
     redoc_url="/redoc",
 )
@@ -45,18 +45,14 @@ def get_base_context(request: Request, current_page: str):
 async def page_dashboard(request: Request):
     """Page 1: Live Radar & Gateway Console Playground"""
     ctx = get_base_context(request, "dashboard")
-    ctx.update({
-        "entries": cache.list_entries(limit=10),
-    })
+    ctx.update({"entries": cache.list_entries(limit=10)})
     return templates.TemplateResponse(request=request, name="index.html", context=ctx)
 
 @app.get("/cache", response_class=HTMLResponse)
 async def page_cache_explorer(request: Request):
     """Page 2: Living Vector Memory & Invalidation Matrix"""
     ctx = get_base_context(request, "cache")
-    ctx.update({
-        "entries": cache.list_entries(limit=100),
-    })
+    ctx.update({"entries": cache.list_entries(limit=100)})
     return templates.TemplateResponse(request=request, name="cache.html", context=ctx)
 
 @app.get("/analytics", response_class=HTMLResponse)
@@ -77,10 +73,27 @@ async def page_docs(request: Request):
     ctx = get_base_context(request, "docs")
     return templates.TemplateResponse(request=request, name="docs.html", context=ctx)
 
+@app.get("/pitch", response_class=HTMLResponse)
+async def page_pitch(request: Request):
+    """Page 6: Interactive Pitch Deck & Presentation Slides"""
+    ctx = get_base_context(request, "pitch")
+    return templates.TemplateResponse(request=request, name="pitch.html", context=ctx)
+
 # ================= API ENDPOINTS =================
 
 @app.post("/v1/chat/completions")
 async def chat_completions(req: ChatCompletionRequest, response: Response):
+    """
+    OpenAI & Bifrost drop-in proxy completion endpoint with Living Semantic Caching
+    and real-time token streaming (SSE) support.
+    """
+    if req.stream:
+        return StreamingResponse(
+            proxy_engine.stream_chat_completion(req),
+            media_type="text/event-stream",
+            headers={"X-Heimdall-Mode": "STREAMING_SSE"}
+        )
+
     resp_obj, headers = await proxy_engine.handle_chat_completion(req)
     for k, v in headers.items():
         response.headers[k] = v
@@ -111,6 +124,9 @@ async def force_probe_entry(entry_id: str):
     if freshness < settings.FRESHNESS_THRESHOLD:
         entry.status = "DRIFT_DETECTED"
         cache.metrics.stale_invalidations += 1
+    from .storage import db_storage
+    db_storage.save_entry(entry)
+    cache._sync_metrics()
     return {
         "id": entry_id,
         "freshness": freshness,
