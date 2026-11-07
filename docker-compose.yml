@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  heimdall-cache:
+    build: .
+    container_name: heimdall-cache
+    ports:
+      - "8000:8000"
+    environment:
+      - HEIMDALL_PORT=8000
+      - TAVILY_API_KEY=${TAVILY_API_KEY:-}
+      - BIFROST_UPSTREAM_URL=http://bifrost-gateway:8080/v1
+      - HEIMDALL_SIMILARITY_THRESHOLD=0.85
+      - HEIMDALL_FRESHNESS_THRESHOLD=70.0
+    restart: unless-stopped
+    depends_on:
+      - bifrost-gateway
+
+  bifrost-gateway:
+    image: ghcr.io/maximhq/bifrost:latest
+    container_name: bifrost-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    restart: unless-stopped

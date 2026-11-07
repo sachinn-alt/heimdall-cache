@@ -8,10 +8,12 @@ env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
 class Settings(BaseModel):
-    # API Keys
+    # API Keys & Gateway Routing
     TAVILY_API_KEY: str = os.getenv("TAVILY_API_KEY", "")
-    UPSTREAM_BASE_URL: str = os.getenv("UPSTREAM_BASE_URL", "https://api.openai.com/v1")
-    UPSTREAM_API_KEY: str = os.getenv("UPSTREAM_API_KEY", "")
+    BIFROST_UPSTREAM_URL: str = os.getenv("BIFROST_UPSTREAM_URL", os.getenv("UPSTREAM_BASE_URL", "https://api.openai.com/v1"))
+    BIFROST_API_KEY: str = os.getenv("BIFROST_API_KEY", os.getenv("UPSTREAM_API_KEY", ""))
+    UPSTREAM_BASE_URL: str = os.getenv("UPSTREAM_BASE_URL", os.getenv("BIFROST_UPSTREAM_URL", "https://api.openai.com/v1"))
+    UPSTREAM_API_KEY: str = os.getenv("UPSTREAM_API_KEY", os.getenv("BIFROST_API_KEY", ""))
 
     # Server Settings
     HOST: str = os.getenv("HEIMDALL_HOST", "0.0.0.0")

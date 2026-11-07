@@ -40,6 +40,8 @@ class GatewayProxy:
                 "X-Heimdall-Similarity": str(sim),
                 "X-Heimdall-Freshness-Score": f"{entry.overall_freshness}%",
                 "X-Heimdall-Latency-MS": str(latency_ms),
+                "X-Bifrost-Cache-Status": "HIT",
+                "X-Bifrost-Grounded": "true",
             }
 
             resp = ChatCompletionResponse(
@@ -80,6 +82,8 @@ class GatewayProxy:
             "X-Heimdall-Similarity": str(sim),
             "X-Heimdall-Freshness-Score": f"{new_entry.overall_freshness}%",
             "X-Heimdall-Latency-MS": str(latency_ms),
+            "X-Bifrost-Cache-Status": "MISS" if status != "STALE_INVALIDATED" else "STALE_INVALIDATED",
+            "X-Bifrost-Grounded": "true",
         }
 
         resp = ChatCompletionResponse(
