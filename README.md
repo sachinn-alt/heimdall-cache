@@ -6,7 +6,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Bifrost Gateway Compatible](https://img.shields.io/badge/Bifrost-Compatible-8b5cf6.svg)](https://github.com/maximhq/bifrost)
 [![Tavily Powered](https://img.shields.io/badge/Tavily-Grounding_Active-06b6d4.svg)](https://tavily.com)
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-black?style=for-the-badge&logo=vercel)](https://swift-crater-u0h1f6i.tmp.now/)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-black?style=for-the-badge&logo=vercel)](https://heimdall-cache.vercel.app/)
 [![Deploy to Render](https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/sachinn-alt/heimdall-cache)
 [![Live on GitHub Pages](https://img.shields.io/badge/Live_Showcase-GitHub_Pages-8b5cf6?style=for-the-badge&logo=github)](https://sachinn-alt.github.io/heimdall-cache/)
 
@@ -19,10 +19,10 @@ Experience HeimdallCache across production serverless, turnkey container, or cli
 | Target | Deployment Role | Live URL | Status |
 |---|---|---|---|
 | **Render Core** | **Dedicated Living Vector Gateway** | [https://heimdall-cache.onrender.com/](https://heimdall-cache.onrender.com/) | `🟢 Live & Operational` |
-| **Vercel Edge** | **Edge Router & UI (Proxied to Render)** | [https://swift-crater-u0h1f6i.tmp.now/](https://swift-crater-u0h1f6i.tmp.now/) | `🟢 Live & Connected` |
-| **Pitch Deck** | **In-Browser Interactive Slides** | [https://heimdall-cache.onrender.com/pitch](https://heimdall-cache.onrender.com/pitch) | `🟢 Live Presentation` |
+| **Vercel Edge** | **Edge Router & UI (Proxied to Render)** | [https://heimdall-cache.vercel.app/](https://heimdall-cache.vercel.app/) | `🟢 Live & Connected` |
+| **Pitch Deck** | **In-Browser Interactive Slides** | [https://heimdall-cache.vercel.app/pitch](https://heimdall-cache.vercel.app/pitch) | `🟢 Live Presentation` |
 | **GitHub Pages** | **Client-Side Visual Showcase** | [https://sachinn-alt.github.io/heimdall-cache/](https://sachinn-alt.github.io/heimdall-cache/) | `🟢 Operational` |
-| **Swagger UI** | **Interactive OpenAPI Specification** | [https://heimdall-cache.onrender.com/swagger](https://heimdall-cache.onrender.com/swagger) | `🟢 Interactive Docs` |
+| **Swagger UI** | **Interactive OpenAPI Specification** | [https://heimdall-cache.vercel.app/swagger](https://heimdall-cache.vercel.app/swagger) | `🟢 Interactive Docs` |
 
 > 🔗 **Connected Edge Architecture:**  
 > Vercel is connected directly to the Render backend via edge rewrites (`vercel.json`). Any request sent to Vercel's `/v1/chat/completions` or `/api/metrics` is automatically proxied with sub-millisecond edge routing to the persistent Render Living Cache cluster at `https://heimdall-cache.onrender.com`!
@@ -31,12 +31,12 @@ Experience HeimdallCache across production serverless, turnkey container, or cli
 
 | View | Purpose | Live Vercel Endpoint | Static GitHub Pages |
 |---|---|---|---|
-| **Radar & Console** | Real-time query playground & live telemetry sweep | [`/`](https://swift-crater-u0h1f6i.tmp.now/) | [`index.html`](https://sachinn-alt.github.io/heimdall-cache/index.html) |
-| **Vector Matrix** | Living vector memory table with volatility badges & invalidations | [`/cache`](https://swift-crater-u0h1f6i.tmp.now/cache) | [`cache.html`](https://sachinn-alt.github.io/heimdall-cache/cache.html) |
-| **Economics Hub** | Enterprise ROI calculator and token savings metrics | [`/analytics`](https://swift-crater-u0h1f6i.tmp.now/analytics) | [`analytics.html`](https://sachinn-alt.github.io/heimdall-cache/analytics.html) |
-| **Control Plane** | Cosine similarity & Tavily freshness thresholds | [`/settings`](https://swift-crater-u0h1f6i.tmp.now/settings) | [`settings.html`](https://sachinn-alt.github.io/heimdall-cache/settings.html) |
-| **API Docs** | Interactive SDK snippets, curl examples, and schema | [`/docs`](https://swift-crater-u0h1f6i.tmp.now/docs) | [`docs.html`](https://sachinn-alt.github.io/heimdall-cache/docs.html) |
-| **Pitch Deck** | 6-slide presentation deck with speaker notes (`N`) | [`/pitch`](https://swift-crater-u0h1f6i.tmp.now/pitch) | [`pitch.html`](https://sachinn-alt.github.io/heimdall-cache/pitch.html) |
+| **Radar & Console** | Real-time query playground & live telemetry sweep | [`/`](https://heimdall-cache.vercel.app/) | [`index.html`](https://sachinn-alt.github.io/heimdall-cache/index.html) |
+| **Vector Matrix** | Living vector memory table with volatility badges & invalidations | [`/cache`](https://heimdall-cache.vercel.app/cache) | [`cache.html`](https://sachinn-alt.github.io/heimdall-cache/cache.html) |
+| **Economics Hub** | Enterprise ROI calculator and token savings metrics | [`/analytics`](https://heimdall-cache.vercel.app/analytics) | [`analytics.html`](https://sachinn-alt.github.io/heimdall-cache/analytics.html) |
+| **Control Plane** | Cosine similarity & Tavily freshness thresholds | [`/settings`](https://heimdall-cache.vercel.app/settings) | [`settings.html`](https://sachinn-alt.github.io/heimdall-cache/settings.html) |
+| **API Docs** | Interactive SDK snippets, curl examples, and schema | [`/docs`](https://heimdall-cache.vercel.app/docs) | [`docs.html`](https://sachinn-alt.github.io/heimdall-cache/docs.html) |
+| **Pitch Deck** | 6-slide presentation deck with speaker notes (`N`) | [`/pitch`](https://heimdall-cache.vercel.app/pitch) | [`pitch.html`](https://sachinn-alt.github.io/heimdall-cache/pitch.html) |
 
 ---
 
@@ -201,7 +201,7 @@ from openai import OpenAI
 
 # Connect to the live HeimdallCache gateway (Render backend or Vercel edge)
 client = OpenAI(
-    base_url="https://heimdall-cache.onrender.com/v1",  # or https://swift-crater-u0h1f6i.tmp.now/v1
+    base_url="https://heimdall-cache.onrender.com/v1",  # or https://heimdall-cache.vercel.app/v1
     api_key="none"  # Upstream keys managed securely by Heimdall
 )
 
@@ -224,7 +224,7 @@ curl -X POST "https://heimdall-cache.onrender.com/v1/chat/completions" \
   }'
 
 # Or query through the Vercel Edge Proxy:
-curl -X POST "https://swift-crater-u0h1f6i.tmp.now/v1/chat/completions" \
+curl -X POST "https://heimdall-cache.vercel.app/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-4o-mini",
