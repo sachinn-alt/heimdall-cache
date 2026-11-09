@@ -44,16 +44,26 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Chart.js CDN for Interactive Visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
     <!-- ReactBits & Skiper UI Bespoke Animations -->
     <style>
         /* Ambient Background Noise & Lighting */
         body {
             background-color: #030712;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 55%),
+                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 55%),
+                radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.10) 0px, transparent 60%);
             background-attachment: fixed;
+        }
+
+        /* ReactBits 3D Tilt Card */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+            perspective: 1000px;
         }
 
         /* ReactBits Shimmer Button */
@@ -72,7 +82,7 @@
             background: linear-gradient(
                 60deg,
                 transparent 30%,
-                rgba(255, 255, 255, 0.18) 50%,
+                rgba(255, 255, 255, 0.22) 50%,
                 transparent 70%
             );
             transform: rotate(30deg) translateY(-100%);
@@ -84,16 +94,24 @@
 
         /* Skiper Glass Card */
         .skiper-card {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(15, 23, 42, 0.68);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.6);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
         }
         .skiper-card:hover {
-            border-color: rgba(168, 85, 247, 0.25);
-            box-shadow: 0 25px 50px -12px rgba(124, 58, 237, 0.15);
+            border-color: rgba(168, 85, 247, 0.3);
+            box-shadow: 0 25px 50px -10px rgba(124, 58, 237, 0.2);
+        }
+
+        /* Animated Border Beam */
+        @keyframes border-beam {
+            100% { offset-distance: 100%; }
+        }
+        .animate-border-beam {
+            animation: border-beam 6s linear infinite;
         }
 
         /* Radar Scanning Sweep */
@@ -105,12 +123,38 @@
             animation: radar-sweep 4s linear infinite;
         }
 
+        /* Blip Pulsing */
+        @keyframes blip-ping {
+            0% { transform: scale(1); opacity: 1; }
+            70% { transform: scale(3.5); opacity: 0; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+        .animate-blip-ping {
+            animation: blip-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
         /* Subtle Glow Halos */
         .glow-halo-purple {
-            box-shadow: 0 0 30px -5px rgba(124, 58, 237, 0.35);
+            box-shadow: 0 0 35px -5px rgba(124, 58, 237, 0.4);
         }
         .glow-halo-cyan {
-            box-shadow: 0 0 30px -5px rgba(6, 182, 212, 0.35);
+            box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.4);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(147, 51, 234, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 85, 247, 0.7);
         }
     </style>
 </head>
@@ -200,6 +244,23 @@
 
     <script>
         lucide.createIcons();
+
+        // ReactBits 3D Perspective Tilt for cards
+        document.querySelectorAll('[data-tilt]').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -6;
+                const rotateY = ((x - centerX) / centerX) * 6;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            });
+        });
     </script>
     {% block scripts %}{% endblock %}
 </body>

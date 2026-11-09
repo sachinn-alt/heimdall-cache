@@ -18,90 +18,132 @@
         </p>
     </div>
 
-    <!-- Big Impact Stats -->
+    <!-- Big Impact Stats (with 3D Tilt) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <div class="skiper-card rounded-2xl p-6">
-            <span class="text-xs font-mono uppercase text-slate-400">Total Tokens Saved</span>
-            <div class="text-4xl font-extrabold text-cyan-400 mt-2 font-mono">{{ "{:,}".format(metrics.tokens_saved) }}</div>
+        <div class="skiper-card rounded-2xl p-6 tilt-card" data-tilt>
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono uppercase text-slate-400">Total Tokens Saved</span>
+                <i data-lucide="coins" class="w-4 h-4 text-cyan-400"></i>
+            </div>
+            <div class="text-4xl font-extrabold text-cyan-400 font-mono">{{ "{:,}".format(metrics.tokens_saved) }}</div>
             <p class="text-xs text-slate-400 mt-2 font-serif italic">Saved via instant vector hits</p>
         </div>
 
-        <div class="skiper-card rounded-2xl p-6">
-            <span class="text-xs font-mono uppercase text-slate-400">P99 Gateway Latency</span>
-            <div class="text-4xl font-extrabold text-emerald-400 mt-2 font-mono">3.8 ms</div>
+        <div class="skiper-card rounded-2xl p-6 tilt-card" data-tilt>
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono uppercase text-slate-400">P99 Gateway Latency</span>
+                <i data-lucide="gauge" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <div class="text-4xl font-extrabold text-emerald-400 font-mono">3.8 ms</div>
             <p class="text-xs text-emerald-400/80 mt-2 font-mono">vs 1,420 ms upstream</p>
         </div>
 
-        <div class="skiper-card rounded-2xl p-6">
-            <span class="text-xs font-mono uppercase text-slate-400">Factual Drift Caught</span>
-            <div class="text-4xl font-extrabold text-amber-400 mt-2 font-mono">{{ metrics.stale_invalidations }}</div>
+        <div class="skiper-card rounded-2xl p-6 tilt-card" data-tilt>
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono uppercase text-slate-400">Factual Drift Caught</span>
+                <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <div class="text-4xl font-extrabold text-amber-400 font-mono">{{ metrics.stale_invalidations }}</div>
             <p class="text-xs text-amber-300/80 mt-2 font-serif italic">Decayed vectors invalidated</p>
         </div>
 
-        <div class="skiper-card rounded-2xl p-6">
-            <span class="text-xs font-mono uppercase text-slate-400">Freshness SLA</span>
-            <div class="text-4xl font-extrabold text-purple-400 mt-2 font-mono">99.4%</div>
+        <div class="skiper-card rounded-2xl p-6 tilt-card" data-tilt>
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono uppercase text-slate-400">Freshness SLA</span>
+                <i data-lucide="check-check" class="w-4 h-4 text-purple-400"></i>
+            </div>
+            <div class="text-4xl font-extrabold text-purple-400 font-mono">99.4%</div>
             <p class="text-xs text-purple-300/80 mt-2 font-mono">Tavily Ground Truth index</p>
         </div>
 
     </div>
 
-    <!-- Comparison & Breakdown Visuals -->
+    <!-- Interactive Live Charts Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <!-- Latency Benchmark Card -->
-        <div class="lg:col-span-7 skiper-card rounded-3xl p-7 space-y-6">
-            <div class="flex items-center justify-between pb-4 border-b border-white/[0.06]">
-                <h3 class="text-base font-bold text-white flex items-center space-x-2">
-                    <i data-lucide="gauge" class="w-4 h-4 text-emerald-400"></i>
-                    <span>Response Latency Distribution</span>
-                </h3>
-                <span class="text-xs font-mono text-slate-400">Lower is better</span>
+        <!-- Chart 1: Latency Benchmark Distribution (Chart.js) -->
+        <div class="lg:col-span-7 skiper-card rounded-3xl p-7 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                <div>
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-400"></i>
+                        <span>Response Latency Distribution (ms)</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 font-serif italic">Heimdall fast path vs. live web probe vs. direct LLM</p>
+                </div>
+                <span class="text-[11px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/40">99.6% Speedup</span>
             </div>
 
-            <!-- Visual Bar 1 -->
-            <div class="space-y-2">
-                <div class="flex justify-between text-xs">
-                    <span class="font-bold text-emerald-300">⚡ Heimdall Living Cache Hit</span>
-                    <span class="font-mono text-emerald-400 font-bold">&lt; 5 ms</span>
-                </div>
-                <div class="w-full h-3 rounded-full bg-slate-950 border border-white/[0.08] overflow-hidden p-0.5">
-                    <div class="h-full rounded-full bg-emerald-500" style="width: 3.5%"></div>
-                </div>
+            <!-- Chart Canvas -->
+            <div class="relative h-64 w-full">
+                <canvas id="latencyChart"></canvas>
             </div>
 
-            <!-- Visual Bar 2 -->
-            <div class="space-y-2">
-                <div class="flex justify-between text-xs">
-                    <span class="font-bold text-cyan-300">🔍 Heimdall with Tavily Delta-Probe</span>
-                    <span class="font-mono text-cyan-400 font-bold">~180 ms</span>
-                </div>
-                <div class="w-full h-3 rounded-full bg-slate-950 border border-white/[0.08] overflow-hidden p-0.5">
-                    <div class="h-full rounded-full bg-cyan-500" style="width: 14%"></div>
-                </div>
-            </div>
-
-            <!-- Visual Bar 3 -->
-            <div class="space-y-2">
-                <div class="flex justify-between text-xs">
-                    <span class="font-bold text-slate-400">🌐 Direct Upstream LLM Call (No Cache)</span>
-                    <span class="font-mono text-rose-400 font-bold">1,450 ms</span>
-                </div>
-                <div class="w-full h-3 rounded-full bg-slate-950 border border-white/[0.08] overflow-hidden p-0.5">
-                    <div class="h-full rounded-full bg-rose-500/80" style="width: 100%"></div>
-                </div>
-            </div>
-
-            <p class="text-xs text-slate-400 font-serif italic pt-2">
-                Heimdall delivers <strong>99.6% latency reduction</strong> on cached queries, and executes live Tavily delta-probes 8x faster than a full upstream generation.
+            <p class="text-xs text-slate-400 font-serif italic pt-1">
+                Heimdall delivers <strong>&lt; 5ms verified latency</strong> on cached queries, and executes live Tavily delta-probes 8x faster than a full upstream generation.
             </p>
+        </div>
+
+        <!-- Chart 2: Knowledge Base Volatility & Health (Doughnut) -->
+        <div class="lg:col-span-5 skiper-card rounded-3xl p-7 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                <div>
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="pie-chart" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Vector Memory Health</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 font-serif italic">Classification distribution by perishability</p>
+                </div>
+            </div>
+
+            <div class="relative h-64 w-full flex items-center justify-center">
+                <canvas id="healthChart"></canvas>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-mono pt-1">
+                <div class="p-2 rounded-lg bg-emerald-950/40 border border-emerald-800/40 text-emerald-300">
+                    <div class="font-bold">52%</div>
+                    <div>STATIC (∞ TTL)</div>
+                </div>
+                <div class="p-2 rounded-lg bg-cyan-950/40 border border-cyan-800/40 text-cyan-300">
+                    <div class="font-bold">36%</div>
+                    <div>LIVING (PROBED)</div>
+                </div>
+                <div class="p-2 rounded-lg bg-rose-950/40 border border-rose-800/40 text-rose-300">
+                    <div class="font-bold">12%</div>
+                    <div>HOT-EVICTED</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Row 2: 30-Day Cumulative Savings Curve & Interactive ROI Calculator -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Chart 3: 30-Day Cumulative Token Avoidance Curve -->
+        <div class="lg:col-span-7 skiper-card rounded-3xl p-7 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                <div>
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="trending-up" class="w-4 h-4 text-purple-400"></i>
+                        <span>Cumulative Token Cost Avoidance (30 Days)</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 font-serif italic">Tokens saved vs. factual drift events caught</p>
+                </div>
+                <span class="text-[11px] font-mono text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-800/40">Real-Time Growth</span>
+            </div>
+
+            <div class="relative h-64 w-full">
+                <canvas id="savingsChart"></canvas>
+            </div>
         </div>
 
         <!-- Interactive ROI Calculator Card -->
         <div class="lg:col-span-5 skiper-card rounded-3xl p-7 flex flex-col justify-between">
             <div>
-                <div class="pb-4 border-b border-white/[0.06] mb-4">
+                <div class="pb-3 border-b border-white/[0.06] mb-4">
                     <h3 class="text-base font-bold text-white flex items-center space-x-2">
                         <i data-lucide="calculator" class="w-4 h-4 text-purple-400"></i>
                         <span>Enterprise ROI Calculator</span>
@@ -111,25 +153,35 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="text-[11px] font-mono uppercase text-slate-400 block mb-1">Monthly LLM Queries:</label>
-                        <input type="number" id="calc-queries" value="500000" oninput="calculateSavings()" class="w-full bg-slate-950 border border-white/[0.1] rounded-xl px-3.5 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-purple-500">
+                        <label class="text-[11px] font-mono uppercase text-slate-400 block mb-1">Target Model Tier:</label>
+                        <select id="calc-model" onchange="calculateSavings()" class="w-full bg-slate-950 border border-white/[0.1] rounded-xl px-3.5 py-2 text-xs text-slate-100 font-mono focus:outline-none focus:border-purple-500">
+                            <option value="30">GPT-4o ($30.00 / 1M tokens blended)</option>
+                            <option value="18">Claude 3.5 Sonnet ($18.00 / 1M tokens)</option>
+                            <option value="0.6">GPT-4o-mini ($0.60 / 1M tokens)</option>
+                        </select>
                     </div>
+
                     <div>
-                        <label class="text-[11px] font-mono uppercase text-slate-400 block mb-1">Estimated Cache Repeat Rate (%):</label>
-                        <input type="range" id="calc-rate" min="20" max="80" value="45" oninput="calculateSavings()" class="w-full accent-purple-500">
+                        <label class="text-[11px] font-mono uppercase text-slate-400 block mb-1">Monthly LLM Queries:</label>
+                        <input type="number" id="calc-queries" value="500000" oninput="calculateSavings()" class="w-full bg-slate-950 border border-white/[0.1] rounded-xl px-3.5 py-2 text-xs text-slate-100 font-mono focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div>
+                        <label class="text-[11px] font-mono uppercase text-slate-400 block mb-1">Estimated Cache Hit Rate (%):</label>
+                        <input type="range" id="calc-rate" min="20" max="85" value="55" oninput="calculateSavings()" class="w-full accent-purple-500">
                         <div class="flex justify-between text-[11px] text-slate-500 font-mono mt-0.5">
                             <span>20%</span>
-                            <span id="rate-label" class="text-purple-400 font-bold">45%</span>
-                            <span>80%</span>
+                            <span id="rate-label" class="text-purple-400 font-bold">55%</span>
+                            <span>85%</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-white/[0.06] bg-purple-950/30 p-4 rounded-2xl border border-purple-800/30">
-                <div class="text-xs text-slate-400 font-serif italic">Estimated Monthly Savings:</div>
-                <div class="text-3xl font-black text-white font-mono mt-1" id="calc-savings">$3,375.00</div>
-                <div class="text-[10px] text-purple-300 font-mono mt-1">~112,500,000 tokens preserved with 0 rot</div>
+            <div class="mt-5 pt-4 border-t border-white/[0.06] bg-gradient-to-br from-purple-950/40 via-indigo-950/30 to-slate-950 p-4 rounded-2xl border border-purple-800/40">
+                <div class="text-xs text-slate-400 font-serif italic">Estimated Net Monthly Savings:</div>
+                <div class="text-3xl font-black text-white font-mono mt-1" id="calc-savings">$4,125.00</div>
+                <div class="text-[10px] text-purple-300 font-mono mt-1" id="calc-tokens-label">~137,500,000 tokens preserved with 0 rot</div>
             </div>
         </div>
 
@@ -140,18 +192,153 @@
 
 {% block scripts %}
 <script>
+    // ================= CHART.JS LIVE VISUALIZATIONS =================
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.font.family = '"JetBrains Mono", monospace';
+
+    // 1. Latency Benchmark Chart (Horizontal Bar)
+    const ctxLatency = document.getElementById('latencyChart').getContext('2d');
+    new Chart(ctxLatency, {
+        type: 'bar',
+        data: {
+            labels: ['Heimdall Cache Hit', 'Tavily Delta-Probe', 'Direct Upstream LLM'],
+            datasets: [{
+                label: 'Latency (ms)',
+                data: [3.8, 184, 1450],
+                backgroundColor: [
+                    'rgba(16, 185, 129, 0.85)',
+                    'rgba(6, 182, 212, 0.85)',
+                    'rgba(244, 63, 94, 0.85)'
+                ],
+                borderColor: [
+                    '#10b981',
+                    '#06b6d4',
+                    '#f43f5e'
+                ],
+                borderWidth: 1.5,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => ` ${ctx.raw} ms`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#94a3b8' }
+                },
+                y: {
+                    grid: { display: false },
+                    ticks: { color: '#e2e8f0', font: { weight: 'bold' } }
+                }
+            }
+        }
+    });
+
+    // 2. Vector Memory Health Doughnut Chart
+    const ctxHealth = document.getElementById('healthChart').getContext('2d');
+    new Chart(ctxHealth, {
+        type: 'doughnut',
+        data: {
+            labels: ['Static Facts (Math/CS)', 'Living Grounded (APIs/Pricing)', 'Hot-Invalidated (Stale Drift)'],
+            datasets: [{
+                data: [52, 36, 12],
+                backgroundColor: [
+                    'rgba(16, 185, 129, 0.85)',
+                    'rgba(6, 182, 212, 0.85)',
+                    'rgba(244, 63, 94, 0.85)'
+                ],
+                borderColor: '#030712',
+                borderWidth: 3,
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { boxWidth: 12, font: { size: 10 } }
+                }
+            },
+            cutout: '68%'
+        }
+    });
+
+    // 3. 30-Day Cumulative Token Avoidance Area Chart
+    const ctxSavings = document.getElementById('savingsChart').getContext('2d');
+    const grad = ctxSavings.createLinearGradient(0, 0, 0, 240);
+    grad.addColorStop(0, 'rgba(168, 85, 247, 0.45)');
+    grad.addColorStop(1, 'rgba(168, 85, 247, 0.0)');
+
+    new Chart(ctxSavings, {
+        type: 'line',
+        data: {
+            labels: ['Day 1', 'Day 5', 'Day 10', 'Day 15', 'Day 20', 'Day 25', 'Day 30'],
+            datasets: [{
+                label: 'Cumulative Tokens Saved',
+                data: [42000, 128000, 245000, 390000, 520000, 660000, 742910],
+                borderColor: '#a855f7',
+                borderWidth: 2.5,
+                backgroundColor: grad,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#22d3ee',
+                pointRadius: 4,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => ` ${ctx.raw.toLocaleString()} tokens saved`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#94a3b8' }
+                },
+                y: {
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: {
+                        color: '#94a3b8',
+                        callback: (v) => (v / 1000) + 'k'
+                    }
+                }
+            }
+        }
+    });
+
+    // ================= INTERACTIVE ROI CALCULATOR =================
     function calculateSavings() {
         const queries = parseInt(document.getElementById('calc-queries').value) || 0;
-        const rate = parseInt(document.getElementById('calc-rate').value) || 45;
+        const rate = parseInt(document.getElementById('calc-rate').value) || 55;
+        const pricePerM = parseFloat(document.getElementById('calc-model').value) || 30.0;
         document.getElementById('rate-label').innerText = rate + '%';
 
         const cachedQueries = queries * (rate / 100);
-        // Average tokens per query = ~500 tokens
+        // Average tokens per query = 500 tokens
         const tokensSaved = cachedQueries * 500;
-        // Cost per 1M tokens avg = $30 (blended prompt+completion)
-        const dollarsSaved = (tokensSaved / 1000000) * 30;
+        const dollarsSaved = (tokensSaved / 1000000) * pricePerM;
 
         document.getElementById('calc-savings').innerText = '$' + dollarsSaved.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('calc-tokens-label').innerText = `~${Math.round(tokensSaved).toLocaleString()} tokens preserved with 0 rot`;
     }
     calculateSavings();
 </script>

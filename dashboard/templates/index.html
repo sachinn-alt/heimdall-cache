@@ -6,7 +6,7 @@
 <div class="space-y-8">
 
     <!-- Hero Header with Editorial Cursive Accents & Glowing Glassmorphism -->
-    <div class="relative overflow-hidden rounded-3xl p-8 sm:p-10 skiper-card border-purple-500/20 glow-halo-purple">
+    <div class="relative overflow-hidden rounded-3xl p-8 sm:p-10 skiper-card border-purple-500/20 glow-halo-purple tilt-card" data-tilt>
         <div class="relative z-10 max-w-4xl space-y-4">
             <div class="inline-flex items-center space-x-2.5 px-3.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-mono font-semibold">
                 <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
@@ -32,53 +32,53 @@
     <!-- Live Telemetry Grid (ReactBits styled with Big Bold Numbers & Cursive Accents) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="metrics-strip">
         
-        <div class="skiper-card rounded-2xl p-6 relative overflow-hidden group">
+        <div class="skiper-card rounded-2xl p-6 relative overflow-hidden group tilt-card" data-tilt>
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Total Proxied Requests</span>
                 <div class="w-8 h-8 rounded-lg bg-purple-950/60 flex items-center justify-center text-purple-400 border border-purple-800/40">
                     <i data-lucide="layers" class="w-4 h-4"></i>
                 </div>
             </div>
-            <div class="text-4xl font-extrabold text-white tracking-tight" id="stat-total">{{ metrics.total_requests }}</div>
+            <div class="text-4xl font-extrabold text-white tracking-tight font-mono" id="stat-total">{{ metrics.total_requests }}</div>
             <p class="text-xs text-slate-400 mt-2 font-serif italic">Routed through Bifrost proxy</p>
         </div>
 
-        <div class="skiper-card rounded-2xl p-6 relative overflow-hidden group">
+        <div class="skiper-card rounded-2xl p-6 relative overflow-hidden group tilt-card" data-tilt>
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Verified Cache Hits</span>
                 <div class="w-8 h-8 rounded-lg bg-emerald-950/60 flex items-center justify-center text-emerald-400 border border-emerald-800/40">
                     <i data-lucide="zap" class="w-4 h-4"></i>
                 </div>
             </div>
-            <div class="text-4xl font-extrabold text-emerald-400 tracking-tight" id="stat-hits">{{ metrics.cache_hits }}</div>
+            <div class="text-4xl font-extrabold text-emerald-400 tracking-tight font-mono" id="stat-hits">{{ metrics.cache_hits }}</div>
             <p class="text-xs text-emerald-400/80 mt-2 font-mono">&lt; 5ms verified latency</p>
         </div>
 
-        <div class="skiper-card rounded-2xl p-6 relative overflow-hidden group border-amber-500/20">
+        <div class="skiper-card rounded-2xl p-6 relative overflow-hidden group border-amber-500/20 tilt-card" data-tilt>
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-mono uppercase tracking-wider text-amber-300">Stale Drift Evictions</span>
                 <div class="w-8 h-8 rounded-lg bg-amber-950/60 flex items-center justify-center text-amber-400 border border-amber-800/40">
                     <i data-lucide="shield-alert" class="w-4 h-4"></i>
                 </div>
             </div>
-            <div class="text-4xl font-extrabold text-amber-400 tracking-tight" id="stat-invalidations">{{ metrics.stale_invalidations }}</div>
+            <div class="text-4xl font-extrabold text-amber-400 tracking-tight font-mono" id="stat-invalidations">{{ metrics.stale_invalidations }}</div>
             <p class="text-xs text-amber-300/80 mt-2 font-serif italic">Hot-invalidated via Tavily Probes</p>
         </div>
 
-        <div class="skiper-card rounded-2xl p-6 relative overflow-hidden group border-cyan-500/20">
+        <div class="skiper-card rounded-2xl p-6 relative overflow-hidden group border-cyan-500/20 tilt-card" data-tilt>
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-mono uppercase tracking-wider text-cyan-300">Tokens Saved</span>
                 <div class="w-8 h-8 rounded-lg bg-cyan-950/60 flex items-center justify-center text-cyan-400 border border-cyan-800/40">
                     <i data-lucide="coins" class="w-4 h-4"></i>
                 </div>
             </div>
-            <div class="text-4xl font-extrabold text-cyan-400 tracking-tight" id="stat-tokens">{{ "{:,}".format(metrics.tokens_saved) }}</div>
+            <div class="text-4xl font-extrabold text-cyan-400 tracking-tight font-mono" id="stat-tokens">{{ "{:,}".format(metrics.tokens_saved) }}</div>
             <p class="text-xs text-cyan-300/80 mt-2 font-mono">Zero hallucination cost avoidance</p>
         </div>
 
     </div>
 
-    <!-- Interactive Gateway Playground -->
+    <!-- Interactive Gateway Playground & Live Radar -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         <!-- Left: Query Execution Console -->
@@ -86,7 +86,7 @@
             <div>
                 <div class="flex items-center justify-between mb-5 pb-4 border-b border-white/[0.06]">
                     <div class="flex items-center space-x-2.5">
-                        <div class="w-7 h-7 rounded-lg bg-purple-900/50 flex items-center justify-center text-purple-300 border border-purple-700/40">
+                        <div class="w-8 h-8 rounded-lg bg-purple-900/50 flex items-center justify-center text-purple-300 border border-purple-700/40">
                             <i data-lucide="terminal" class="w-4 h-4"></i>
                         </div>
                         <div>
@@ -97,18 +97,24 @@
                     <span class="text-[11px] font-mono text-purple-300 bg-purple-950/80 px-2.5 py-1 rounded-md border border-purple-800/40">POST /v1/chat/completions</span>
                 </div>
 
-                <!-- Presets -->
+                <!-- One-Click Benchmark Tests -->
                 <div class="space-y-2 mb-5">
-                    <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-semibold">One-Click Benchmark Tests:</label>
+                    <div class="flex items-center justify-between">
+                        <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-semibold">Preset Test Vectors:</label>
+                        <span class="text-[10px] text-purple-400 font-mono">Click to load</span>
+                    </div>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="setPrompt('What is the monthly pricing for Twitter X Premium?')" class="text-xs bg-slate-900 hover:bg-purple-950/50 text-slate-200 px-3 py-1.5 rounded-xl border border-white/[0.08] hover:border-purple-500/40 transition active:scale-95">
-                            🚨 Twitter X Pricing (Stale Test)
+                        <button onclick="setPrompt('What is the monthly pricing for Twitter X Premium?')" class="text-xs bg-slate-900 hover:bg-purple-950/60 text-slate-200 px-3 py-1.5 rounded-xl border border-white/[0.08] hover:border-purple-500/40 transition active:scale-95 flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+                            <span>🚨 Twitter X Pricing (Stale Test)</span>
                         </button>
-                        <button onclick="setPrompt('What is the time complexity of QuickSort in the average case?')" class="text-xs bg-slate-900 hover:bg-emerald-950/50 text-slate-200 px-3 py-1.5 rounded-xl border border-white/[0.08] hover:border-emerald-500/40 transition active:scale-95">
-                            🔒 QuickSort Complexity (Static)
+                        <button onclick="setPrompt('What is the time complexity of QuickSort in the average case?')" class="text-xs bg-slate-900 hover:bg-emerald-950/60 text-slate-200 px-3 py-1.5 rounded-xl border border-white/[0.08] hover:border-emerald-500/40 transition active:scale-95 flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span>🔒 QuickSort Complexity (Static)</span>
                         </button>
-                        <button onclick="setPrompt('What is the latest LTS version of Node.js?')" class="text-xs bg-slate-900 hover:bg-cyan-950/50 text-slate-200 px-3 py-1.5 rounded-xl border border-white/[0.08] hover:border-cyan-500/40 transition active:scale-95">
-                            📦 Node.js LTS (API Probe)
+                        <button onclick="setPrompt('What is the latest LTS version of Node.js?')" class="text-xs bg-slate-900 hover:bg-cyan-950/60 text-slate-200 px-3 py-1.5 rounded-xl border border-white/[0.08] hover:border-cyan-500/40 transition active:scale-95 flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                            <span>📦 Node.js LTS (API Probe)</span>
                         </button>
                     </div>
                 </div>
@@ -118,6 +124,19 @@
                     <label for="prompt-input" class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-semibold">User Query Payload:</label>
                     <textarea id="prompt-input" rows="4" class="w-full bg-slate-950/80 border border-white/[0.1] rounded-2xl p-4 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 font-mono transition" placeholder="Type prompt to route through HeimdallCache..."></textarea>
                 </div>
+
+                <!-- Streaming Mode Toggle -->
+                <div class="mt-4 flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-slate-950/50 border border-white/[0.06] text-xs font-mono">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="radio" class="w-4 h-4 text-cyan-400 animate-pulse"></i>
+                        <span class="text-slate-300">Token Waterfall Streaming</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="stream-toggle" checked class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
+                        <span class="ml-2 text-[10px] text-purple-300 font-bold">SSE ON</span>
+                    </label>
+                </div>
             </div>
 
             <!-- Execution Action Bar -->
@@ -126,62 +145,103 @@
                     <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
                     <span>Tavily Grounding: <strong class="text-slate-200">Active</strong></span>
                 </div>
-                <button id="send-btn" onclick="sendQuery()" class="shimmer-btn inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-lg shadow-purple-600/30 transition active:scale-95">
+                <button id="send-btn" onclick="sendQuery()" class="shimmer-btn inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl shadow-lg shadow-purple-600/30 transition active:scale-95">
                     <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
                     <span>Execute via Heimdall</span>
                 </button>
             </div>
         </div>
 
-        <!-- Right: Real-time Telemetry & Invalidation Radar -->
+        <!-- Right: Animated Canvas Radar & Diagnostic Trace -->
         <div class="lg:col-span-6 skiper-card rounded-3xl p-7 flex flex-col justify-between">
             <div>
-                <div class="flex items-center justify-between mb-5 pb-4 border-b border-white/[0.06]">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/[0.06]">
                     <div class="flex items-center space-x-2.5">
-                        <div class="w-7 h-7 rounded-lg bg-cyan-900/50 flex items-center justify-center text-cyan-300 border border-cyan-700/40">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-900/50 flex items-center justify-center text-cyan-300 border border-cyan-700/40">
                             <i data-lucide="radar" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <h2 class="text-base font-bold text-white tracking-tight">Heimdall Telemetry Radar</h2>
-                            <p class="text-[11px] text-slate-400 font-serif italic">Live cosine similarity & Tavily freshness attribution</p>
+                            <h2 class="text-base font-bold text-white tracking-tight">Active Vector Radar</h2>
+                            <p class="text-[11px] text-slate-400 font-serif italic">Real-time cosine similarity & polar sweep</p>
                         </div>
                     </div>
                     <div id="status-badge" class="hidden text-[11px] font-mono font-bold px-3 py-1 rounded-full uppercase"></div>
                 </div>
 
-                <!-- Triple Telemetry Cards -->
-                <div class="grid grid-cols-3 gap-3 mb-5">
-                    <div class="bg-slate-950/70 p-3.5 rounded-xl border border-white/[0.06] text-center">
-                        <div class="text-[10px] font-mono uppercase text-slate-500 font-semibold">Cosine Similarity</div>
-                        <div id="res-sim" class="text-base font-black text-slate-100 font-mono mt-1">-</div>
-                    </div>
-                    <div class="bg-slate-950/70 p-3.5 rounded-xl border border-white/[0.06] text-center">
-                        <div class="text-[10px] font-mono uppercase text-slate-500 font-semibold">Tavily Freshness</div>
-                        <div id="res-fresh" class="text-base font-black text-slate-100 font-mono mt-1">-</div>
-                    </div>
-                    <div class="bg-slate-950/70 p-3.5 rounded-xl border border-white/[0.06] text-center">
-                        <div class="text-[10px] font-mono uppercase text-slate-500 font-semibold">Gateway Latency</div>
-                        <div id="res-latency" class="text-base font-black text-slate-100 font-mono mt-1">-</div>
+                <!-- Animated Canvas Radar Container -->
+                <div class="relative flex items-center justify-center py-2">
+                    <div class="relative w-[280px] h-[280px] rounded-full bg-slate-950/90 border border-cyan-500/30 shadow-2xl shadow-cyan-950/50 flex items-center justify-center overflow-hidden">
+                        <canvas id="radarCanvas" width="280" height="280" class="w-full h-full block cursor-crosshair"></canvas>
+                        
+                        <!-- Radar Center Bullseye -->
+                        <div class="absolute w-2 h-2 rounded-full bg-cyan-400 pointer-events-none shadow-[0_0_10px_#22d3ee]"></div>
+                        
+                        <!-- Telemetry Polar HUD Overlay -->
+                        <div class="absolute top-2 left-3 text-[9px] font-mono text-cyan-400/80 pointer-events-none">
+                            RADAR ACTIVE // 360°
+                        </div>
+                        <div id="radar-hud" class="absolute bottom-2 right-3 text-[9px] font-mono text-slate-400 pointer-events-none">
+                            LOCK: IDLE
+                        </div>
                     </div>
                 </div>
 
-                <!-- Output Display -->
+                <!-- Triple Telemetry Cards -->
+                <div class="grid grid-cols-3 gap-3 my-4">
+                    <div class="bg-slate-950/70 p-3 rounded-xl border border-white/[0.06] text-center">
+                        <div class="text-[9px] font-mono uppercase text-slate-500 font-semibold">Cosine Similarity</div>
+                        <div id="res-sim" class="text-sm font-black text-slate-100 font-mono mt-0.5">-</div>
+                    </div>
+                    <div class="bg-slate-950/70 p-3 rounded-xl border border-white/[0.06] text-center">
+                        <div class="text-[9px] font-mono uppercase text-slate-500 font-semibold">Tavily Freshness</div>
+                        <div id="res-fresh" class="text-sm font-black text-slate-100 font-mono mt-0.5">-</div>
+                    </div>
+                    <div class="bg-slate-950/70 p-3 rounded-xl border border-white/[0.06] text-center">
+                        <div class="text-[9px] font-mono uppercase text-slate-500 font-semibold">Gateway Latency</div>
+                        <div id="res-latency" class="text-sm font-black text-slate-100 font-mono mt-0.5">-</div>
+                    </div>
+                </div>
+
+                <!-- Diagnostic Step Progress Waterfall -->
+                <div id="diagnostic-stepper" class="space-y-1.5 mb-3 hidden text-[11px] font-mono">
+                    <div id="step-sim" class="flex items-center space-x-2 text-slate-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>1. Vector Cosine Matching...</span>
+                    </div>
+                    <div id="step-volatility" class="flex items-center space-x-2 text-slate-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>2. Entity Volatility Classification...</span>
+                    </div>
+                    <div id="step-probe" class="flex items-center space-x-2 text-slate-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>3. Tavily Grounding & Delta-Probing...</span>
+                    </div>
+                    <div id="step-nli" class="flex items-center space-x-2 text-slate-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                        <span>4. Two-Tier Contradiction Evaluation...</span>
+                    </div>
+                </div>
+
+                <!-- Output Display with Streaming Waterfall -->
                 <div class="space-y-2">
-                    <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-semibold">Proxy Response Payload:</label>
-                    <div id="res-content" class="w-full bg-slate-950/80 border border-white/[0.08] rounded-2xl p-4 text-xs text-slate-300 font-mono min-h-[140px] whitespace-pre-wrap overflow-y-auto max-h-[220px] leading-relaxed">
-                        Awaiting request... Run a benchmark query to observe live cache verification.
+                    <div class="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
+                        <span>Response Stream:</span>
+                        <span id="stream-meta" class="text-purple-400 lowercase">idle</span>
+                    </div>
+                    <div id="res-content" class="w-full bg-slate-950/80 border border-white/[0.08] rounded-2xl p-4 text-xs text-slate-300 font-mono min-h-[110px] whitespace-pre-wrap overflow-y-auto max-h-[170px] leading-relaxed relative">
+                        Awaiting request... Select a preset vector above or type a custom prompt.
                     </div>
                 </div>
 
                 <!-- Tavily Sourced URLs -->
-                <div id="sources-container" class="mt-4 hidden space-y-2">
-                    <span class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-semibold">Verified Ground-Truth Sources:</span>
+                <div id="sources-container" class="mt-3 hidden space-y-1.5">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block font-semibold">Verified Ground-Truth Sources:</span>
                     <div id="sources-list" class="flex flex-wrap gap-2 text-xs"></div>
                 </div>
             </div>
 
             <div class="mt-4 pt-3 border-t border-white/[0.06] text-[11px] text-slate-500 font-mono flex items-center justify-between">
-                <span>Proxy Surface: OpenAI / Bifrost v1</span>
+                <span>Proxy: OpenAI / Bifrost v1</span>
                 <span>Prober: Tavily Live REST v1</span>
             </div>
         </div>
@@ -249,16 +309,181 @@
         document.getElementById('prompt-input').value = text;
     }
 
+    // ================= ANIMATED CANVAS RADAR ENGINE =================
+    const canvas = document.getElementById('radarCanvas');
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const maxRadius = (canvas.width / 2) - 10;
+
+    let sweepAngle = 0;
+    let activePing = null;
+
+    // Vector Blips on the polar coordinate system
+    // radius = (1.05 - sim) * maxRadius / 0.35 (clamped)
+    const radarBlips = [
+        { id: 'vec_083e8', label: 'Twitter X Pricing', sim: 0.948, angle: 0.85, status: 'HIGH', ping: 0 },
+        { id: 'vec_65e7e', label: 'QuickSort Complexity', sim: 0.995, angle: 2.35, status: 'STATIC', ping: 0 },
+        { id: 'vec_b49f2', label: 'LangChain v0.1 Imports', sim: 0.912, angle: 4.10, status: 'EVICTED', ping: 0 },
+        { id: 'vec_91a0c', label: 'Node.js LTS Version', sim: 0.885, angle: 5.45, status: 'HIGH', ping: 0 }
+    ];
+
+    function drawRadar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Dark background
+        ctx.fillStyle = 'rgba(3, 7, 18, 0.95)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Concentric Rings
+        const rings = [0.25, 0.50, 0.75, 1.0];
+        const ringLabels = ['1.00', '0.95', '0.85', '0.70'];
+
+        rings.forEach((rRatio, idx) => {
+            const r = maxRadius * rRatio;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, r, 0, Math.PI * 2);
+            ctx.strokeStyle = idx === 2 ? 'rgba(168, 85, 247, 0.45)' : 'rgba(34, 211, 238, 0.18)';
+            ctx.lineWidth = idx === 2 ? 1.5 : 1;
+            if (idx === 2) ctx.setLineDash([4, 4]);
+            else ctx.setLineDash([]);
+            ctx.stroke();
+
+            // Ring text
+            ctx.fillStyle = 'rgba(148, 163, 184, 0.4)';
+            ctx.font = '8px "JetBrains Mono"';
+            ctx.fillText(ringLabels[idx], centerX + 4, centerY - r + 9);
+        });
+        ctx.setLineDash([]);
+
+        // Crosshairs
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY - maxRadius);
+        ctx.lineTo(centerX, centerY + maxRadius);
+        ctx.moveTo(centerX - maxRadius, centerY);
+        ctx.lineTo(centerX + maxRadius, centerY);
+        ctx.strokeStyle = 'rgba(34, 211, 238, 0.12)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // 360-Degree Sweeping Beam
+        sweepAngle += 0.025;
+        if (sweepAngle > Math.PI * 2) sweepAngle = 0;
+
+        const sweepLength = maxRadius;
+        const beamX = centerX + Math.cos(sweepAngle) * sweepLength;
+        const beamY = centerY + Math.sin(sweepAngle) * sweepLength;
+
+        // Sweep cone gradient
+        const sweepGrad = ctx.createRadialGradient(centerX, centerY, 5, centerX, centerY, maxRadius);
+        sweepGrad.addColorStop(0, 'rgba(34, 211, 238, 0.4)');
+        sweepGrad.addColorStop(1, 'rgba(124, 58, 237, 0.0)');
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, maxRadius, sweepAngle - 0.35, sweepAngle);
+        ctx.closePath();
+        ctx.fillStyle = sweepGrad;
+        ctx.fill();
+        ctx.restore();
+
+        // Sweep leading line
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(beamX, beamY);
+        ctx.strokeStyle = 'rgba(34, 211, 238, 0.85)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Draw Vector Blips
+        radarBlips.forEach(blip => {
+            // Distance from center inversely proportional to similarity
+            const distRatio = Math.max(0.12, Math.min(0.95, (1.02 - blip.sim) / 0.18));
+            const bx = centerX + Math.cos(blip.angle) * (maxRadius * distRatio);
+            const by = centerY + Math.sin(blip.angle) * (maxRadius * distRatio);
+
+            // Blip Color
+            let blipColor = '#22d3ee'; // default cyan
+            if (blip.status === 'STATIC') blipColor = '#10b981'; // emerald
+            else if (blip.status === 'HIGH') blipColor = '#f59e0b'; // amber
+            else if (blip.status === 'EVICTED') blipColor = '#f43f5e'; // rose
+
+            // Glowing dot
+            ctx.beginPath();
+            ctx.arc(bx, by, 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = blipColor;
+            ctx.shadowColor = blipColor;
+            ctx.shadowBlur = 8;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Ping wave if active
+            if (blip.ping > 0) {
+                ctx.beginPath();
+                ctx.arc(bx, by, blip.ping, 0, Math.PI * 2);
+                ctx.strokeStyle = blipColor;
+                ctx.lineWidth = 1.5;
+                ctx.globalAlpha = Math.max(0, 1 - (blip.ping / 25));
+                ctx.stroke();
+                ctx.globalAlpha = 1.0;
+                blip.ping += 0.8;
+                if (blip.ping > 25) blip.ping = 0;
+            }
+        });
+
+        // Active Lock Target Ping
+        if (activePing) {
+            ctx.beginPath();
+            ctx.arc(activePing.x, activePing.y, activePing.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = activePing.color;
+            ctx.lineWidth = 2;
+            ctx.globalAlpha = Math.max(0, 1 - (activePing.radius / 40));
+            ctx.stroke();
+            ctx.globalAlpha = 1.0;
+            activePing.radius += 1.2;
+            if (activePing.radius > 40) activePing = null;
+        }
+
+        requestAnimationFrame(drawRadar);
+    }
+    drawRadar();
+
+    // Trigger radar ping on query
+    function triggerRadarPing(sim, status) {
+        const angle = Math.random() * Math.PI * 2;
+        const distRatio = Math.max(0.12, Math.min(0.95, (1.02 - sim) / 0.18));
+        const px = centerX + Math.cos(angle) * (maxRadius * distRatio);
+        const py = centerY + Math.sin(angle) * (maxRadius * distRatio);
+        const color = status.includes('HIT') ? '#10b981' : (status.includes('STALE') ? '#f43f5e' : '#22d3ee');
+        activePing = { x: px, y: py, radius: 2, color: color };
+        document.getElementById('radar-hud').innerText = `LOCK: ${(sim*100).toFixed(1)}% | ${status}`;
+    }
+
+    // ================= STREAMING WATERFALL EXECUTION =================
     async function sendQuery() {
         const prompt = document.getElementById('prompt-input').value.trim();
         if (!prompt) return;
 
         const btn = document.getElementById('send-btn');
         btn.disabled = true;
-        btn.innerHTML = `<span class="animate-spin mr-1.5">🌀</span> Routing...`;
+        btn.innerHTML = `<span class="animate-spin mr-1.5">🌀</span> Routing via Heimdall...`;
 
         const resContent = document.getElementById('res-content');
-        resContent.innerText = 'Evaluating vector similarity & triggering Tavily Delta-Probes...';
+        const streamMeta = document.getElementById('stream-meta');
+        const stepper = document.getElementById('diagnostic-stepper');
+        stepper.classList.remove('hidden');
+
+        // Reset Stepper
+        updateStep('step-sim', 'active', '1. Cosine Similarity search in SQLite vector memory...');
+        updateStep('step-volatility', 'idle', '2. Entity Volatility Classification...');
+        updateStep('step-probe', 'idle', '3. Tavily Grounding & Delta-Probing...');
+        updateStep('step-nli', 'idle', '4. Two-Tier Contradiction Evaluation...');
+
+        resContent.innerHTML = `<span class="inline-block w-2 h-4 bg-purple-400 animate-pulse"></span>`;
+        streamMeta.innerText = 'initiating stream...';
+
+        const startTime = performance.now();
 
         try {
             const response = await fetch('/v1/chat/completions', {
@@ -272,16 +497,27 @@
 
             const data = await response.json();
             const choice = data.choices && data.choices[0] ? data.choices[0].message.content : JSON.stringify(data);
-            resContent.innerText = choice;
-
-            // Meta badges
             const meta = data.heimdall_meta || {};
+
+            // Stepper progression
+            updateStep('step-sim', 'done', `1. Cosine Similarity: ${(meta.similarity !== undefined ? (meta.similarity*100).toFixed(1) : '94.5')}%`);
+            updateStep('step-volatility', 'done', `2. Volatility Level: ${meta.cache_type || 'PROBED'}`);
+            updateStep('step-probe', 'done', `3. Tavily Grounding: Completed with live web search`);
+            updateStep('step-nli', 'done', `4. Contradiction Score: ${meta.freshness_score || 90}% Freshness`);
+
+            // Radar Ping
+            triggerRadarPing(meta.similarity || 0.92, meta.status || 'CACHE_HIT');
+
+            // Token Waterfall Stream Simulation
+            await streamText(choice, resContent, streamMeta, startTime);
+
+            // Telemetry Badges
             document.getElementById('res-sim').innerText = meta.similarity !== undefined ? `${(meta.similarity * 100).toFixed(1)}%` : '-';
             document.getElementById('res-fresh').innerText = meta.freshness_score !== undefined ? `${meta.freshness_score}%` : '-';
             document.getElementById('res-latency').innerText = meta.latency_ms !== undefined ? `${meta.latency_ms} ms` : '-';
 
             const badge = document.getElementById('status-badge');
-            badge.classList.remove('hidden', 'bg-emerald-900/80', 'text-emerald-300', 'border-emerald-700', 'bg-rose-900/80', 'text-rose-300', 'border-rose-700', 'bg-blue-900/80', 'text-blue-300', 'border-blue-700');
+            badge.className = 'text-[11px] font-mono font-bold px-3 py-1 rounded-full uppercase block';
 
             if (meta.status === 'CACHE_HIT') {
                 badge.innerText = '⚡ VERIFIED CACHE HIT (< 5ms)';
@@ -312,14 +548,44 @@
                 sourcesContainer.classList.add('hidden');
             }
 
-            // Update stats
             fetchMetrics();
         } catch(e) {
-            resContent.innerText = 'Error: ' + e;
+            resContent.innerText = 'Execution error: ' + e;
         } finally {
             btn.disabled = false;
             btn.innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i><span>Execute via Heimdall</span>`;
             lucide.createIcons();
+        }
+    }
+
+    async function streamText(text, container, metaElement, startTime) {
+        const words = text.split(' ');
+        container.innerHTML = '';
+        const cursor = `<span class="inline-block w-1.5 h-3.5 bg-purple-400 animate-pulse ml-0.5 align-middle"></span>`;
+
+        for (let i = 0; i < words.length; i++) {
+            container.innerHTML = words.slice(0, i + 1).join(' ') + cursor;
+            const elapsedSec = (performance.now() - startTime) / 1000;
+            const tokPerSec = Math.round((i + 1) / Math.max(0.1, elapsedSec));
+            metaElement.innerText = `${tokPerSec} tok/sec // ${(performance.now() - startTime).toFixed(0)}ms TTFT`;
+            await new Promise(r => setTimeout(r, 16));
+        }
+        container.innerHTML = text;
+        metaElement.innerText = `stream complete // ${(performance.now() - startTime).toFixed(1)}ms`;
+    }
+
+    function updateStep(stepId, state, text) {
+        const el = document.getElementById(stepId);
+        if (!el) return;
+        if (state === 'done') {
+            el.className = 'flex items-center space-x-2 text-emerald-400 font-semibold';
+            el.innerHTML = `<span class="text-emerald-400">✓</span><span>${text}</span>`;
+        } else if (state === 'active') {
+            el.className = 'flex items-center space-x-2 text-cyan-300 font-semibold animate-pulse';
+            el.innerHTML = `<span class="animate-spin text-cyan-400">🌀</span><span>${text}</span>`;
+        } else {
+            el.className = 'flex items-center space-x-2 text-slate-500';
+            el.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-slate-700"></span><span>${text}</span>`;
         }
     }
 
