@@ -8,6 +8,26 @@
     {
       "source": "/api/(.*)",
       "destination": "https://heimdall-cache.onrender.com/api/$1"
+    },
+    {
+      "source": "/cache",
+      "destination": "/cache.html"
+    },
+    {
+      "source": "/analytics",
+      "destination": "/analytics.html"
+    },
+    {
+      "source": "/settings",
+      "destination": "/settings.html"
+    },
+    {
+      "source": "/docs",
+      "destination": "/docs.html"
+    },
+    {
+      "source": "/pitch",
+      "destination": "/pitch.html"
     }
   ]
 }
