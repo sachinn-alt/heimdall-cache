@@ -250,12 +250,12 @@
                         
                         <!-- Top Box: Incoming Prompt / Vector Claim -->
                         <div class="bg-[#0b0c10] p-4 rounded-2xl border border-white/[0.06] flex items-center justify-between">
-                            <div class="flex-1 mr-3">
+                            <div class="flex-1 mr-3 min-w-0">
                                 <span class="text-[10px] uppercase font-mono text-slate-500 block mb-0.5">Incoming LLM Query</span>
-                                <div class="text-sm font-bold text-white font-mono truncate" id="hero-query-text">"What is Twitter Blue pricing in 2026?"</div>
+                                <div class="text-xs sm:text-sm font-bold text-white font-mono truncate" id="hero-query-text">"What is Twitter Blue pricing in 2026?"</div>
                                 <span class="text-[10px] font-mono text-emerald-400">0.968 Cosine Vector Similarity</span>
                             </div>
-                            <div class="flex items-center space-x-2 bg-[#17181e] px-3 py-1.5 rounded-full border border-white/[0.08] text-xs font-semibold text-white whitespace-nowrap">
+                            <div class="flex items-center space-x-2 bg-[#17181e] px-3 py-1.5 rounded-full border border-white/[0.08] text-xs font-semibold text-white whitespace-nowrap shrink-0">
                                 <div class="w-3.5 h-3.5 rounded-full bg-purple-500 flex items-center justify-center text-[9px] font-bold">⚡</div>
                                 <span>CACHE</span>
                             </div>
@@ -270,12 +270,12 @@
 
                         <!-- Bottom Box: Verified Ground Truth Verdict -->
                         <div class="bg-[#0b0c10] p-4 rounded-2xl border border-white/[0.06] flex items-center justify-between">
-                            <div class="flex-1 mr-3">
+                            <div class="flex-1 mr-3 min-w-0">
                                 <span class="text-[10px] uppercase font-mono text-slate-500 block mb-0.5">Living Sentinel Verdict</span>
-                                <div class="text-sm font-bold text-rose-400 font-mono" id="hero-verdict-text">🚨 STALE DRIFT: Evicted & Tavily Grounded</div>
-                                <span class="text-[10px] font-mono text-slate-400" id="hero-verdict-sub">Live Ground Truth: Basic $3 / Prem $8 / Prem+ $16</span>
+                                <div class="text-xs sm:text-sm font-bold text-rose-400 font-mono truncate" id="hero-verdict-text">🚨 STALE DRIFT: Evicted & Tavily Grounded</div>
+                                <span class="text-[10px] font-mono text-slate-400 truncate block" id="hero-verdict-sub">Live Ground Truth: Basic $3 / Prem $8 / Prem+ $16</span>
                             </div>
-                            <div class="flex items-center space-x-2 bg-[#17181e] px-3 py-1.5 rounded-full border border-white/[0.08] text-xs font-semibold text-white whitespace-nowrap">
+                            <div class="flex items-center space-x-2 bg-[#17181e] px-3 py-1.5 rounded-full border border-white/[0.08] text-xs font-semibold text-white whitespace-nowrap shrink-0">
                                 <div class="w-3.5 h-3.5 rounded-full bg-cyan-400 flex items-center justify-center text-[9px] font-bold text-black">🔍</div>
                                 <span>TAVILY</span>
                             </div>
@@ -475,27 +475,27 @@
                 </div>
 
                 <!-- Floating Orbiting Badges around Ellipse -->
-                <div class="absolute -top-1 left-16 px-3 py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
+                <div class="absolute -top-2 left-4 sm:left-16 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-[10px] sm:text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
                     <span>⚡</span><span>Bifrost Proxy</span>
                 </div>
 
-                <div class="absolute -top-1 right-16 px-3 py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
+                <div class="absolute -top-2 right-4 sm:right-16 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-[10px] sm:text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
                     <span>🔍</span><span>Tavily Probes</span>
                 </div>
 
-                <div class="absolute top-1/2 -left-2 -translate-y-1/2 px-3 py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
+                <div class="absolute top-1/2 -left-2 -translate-y-1/2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-[10px] sm:text-xs font-mono font-semibold text-slate-300 hidden sm:flex items-center space-x-1.5 shadow-lg">
                     <span>🤖</span><span>OpenAI GPT-4o</span>
                 </div>
 
-                <div class="absolute top-1/2 -right-2 -translate-y-1/2 px-3 py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
+                <div class="absolute top-1/2 -right-2 -translate-y-1/2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-[10px] sm:text-xs font-mono font-semibold text-slate-300 hidden sm:flex items-center space-x-1.5 shadow-lg">
                     <span>🧠</span><span>Claude 3.5</span>
                 </div>
 
-                <div class="absolute -bottom-1 left-24 px-3 py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
+                <div class="absolute -bottom-2 left-6 sm:left-24 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-[10px] sm:text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
                     <span>💾</span><span>SQLite Vectors</span>
                 </div>
 
-                <div class="absolute -bottom-1 right-24 px-3 py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
+                <div class="absolute -bottom-2 right-6 sm:right-24 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[#14151a] border border-white/[0.12] text-[10px] sm:text-xs font-mono font-semibold text-slate-300 flex items-center space-x-1.5 shadow-lg">
                     <span>📊</span><span>360° Radar</span>
                 </div>
 
