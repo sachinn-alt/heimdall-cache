@@ -13,136 +13,142 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-                        serif: ['"Instrument Serif"', '"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Host Grotesk"', 'system-ui', 'sans-serif'],
                         mono: ['"JetBrains Mono"', 'monospace'],
                     },
                     colors: {
-                        bifrost: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 950: '#1e0a3d' },
-                        tavily: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 950: '#082f49' }
+                        ground: '#070709',
+                        surface: '#111216',
+                        accentGreen: '#22c55e',
                     }
                 }
             }
         }
     </script>
+
+    <!-- Google Fonts: Host Grotesk + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         body {
-            background-color: #030712;
+            background-color: #070709;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+                radial-gradient(at 50% 0%, rgba(168, 85, 247, 0.14) 0px, transparent 60%),
+                radial-gradient(at 20% 30%, rgba(34, 197, 94, 0.08) 0px, transparent 50%),
+                radial-gradient(at 80% 40%, rgba(244, 63, 94, 0.10) 0px, transparent 55%),
+                radial-gradient(at 50% 85%, rgba(124, 58, 237, 0.12) 0px, transparent 65%);
             background-attachment: fixed;
+            color: #faf8f9;
+            font-family: 'Host Grotesk', system-ui, sans-serif;
         }
-        .skiper-card {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+
+        .glass-card {
+            background: rgba(17, 18, 22, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+        }
+
+        .gradient-pill {
+            background: linear-gradient(135deg, #f43f5e 0%, #ec4899 45%, #a855f7 100%);
+            box-shadow: 0 0 25px -4px rgba(236, 72, 153, 0.5);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .gradient-pill:hover {
+            box-shadow: 0 0 35px 2px rgba(236, 72, 153, 0.75);
+            transform: scale(1.02);
         }
     </style>
 </head>
-<body class="text-slate-100 min-h-screen font-sans selection:bg-purple-500 selection:text-white flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-pink-500 selection:text-white">
 
-    <!-- Top Navigation Bar -->
-    <nav class="border-b border-white/[0.08] bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-            <a href="./" class="flex items-center space-x-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform duration-300">
-                    <span class="text-lg">🌈</span>
-                </div>
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-purple-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent">HeimdallCache</span>
-                        <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-purple-950/80 text-purple-300 border border-purple-800/50">LIVE DEMO</span>
+    <!-- Header -->
+    <header class="w-full border-b border-white/[0.06] bg-[#070709]/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3 group">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-pink-500 via-purple-600 to-indigo-500 flex items-center justify-center p-0.5 shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform">
+                    <div class="w-full h-full bg-[#070709] rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
                     </div>
-                    <p class="text-[11px] text-slate-400 font-serif italic">The living gateway sentinel for Bifrost</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xl font-bold tracking-tight text-white">Heimdall</span>
+                    <span class="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-800/40">Bifrost Native</span>
                 </div>
             </a>
 
-            <!-- Navigation Links -->
-            <div class="hidden md:flex items-center space-x-1 p-1 bg-slate-900/80 rounded-xl border border-white/[0.06]">
-                <a href="./" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-                    <span>Console</span>
-                </a>
-                <a href="./cache.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                    <i data-lucide="database" class="w-3.5 h-3.5"></i>
-                    <span>Living Vectors</span>
-                </a>
-                <a href="./analytics.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                    <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i>
-                    <span>Analytics</span>
-                </a>
-                <a href="./settings.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                    <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-                    <span>Thresholds</span>
-                </a>
-                <a href="./docs.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30">
-                    <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-                    <span>API Docs</span>
-                </a>
-            </div>
+            <nav class="hidden lg:flex items-center space-x-1 p-1 bg-[#121318]/90 rounded-2xl border border-white/[0.06]">
+                <a href="index.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Console</a>
+                <a href="cache.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Living Vectors</a>
+                <a href="analytics.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Analytics</a>
+                <a href="settings.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Thresholds</a>
+                <a href="docs.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-indigo-500/20 text-white border border-purple-500/40 shadow-sm transition">API Docs</a>
+                <a href="pitch.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Pitch Deck</a>
+            </nav>
 
-            <div class="flex items-center space-x-3">
-                <a href="https://github.com/sachinn-alt/heimdall-cache" target="_blank" class="p-2 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/[0.08] rounded-xl transition-all hover:scale-105 active:scale-95" title="View Source on GitHub">
+            <div class="hidden sm:flex items-center space-x-3">
+                <a href="https://github.com/sachinn-alt/heimdall-cache" target="_blank" class="p-2 text-slate-400 hover:text-white bg-[#14151a] hover:bg-[#1a1c22] border border-white/[0.08] rounded-full transition-all hover:scale-105" title="GitHub">
                     <i data-lucide="github" class="w-4 h-4"></i>
                 </a>
+                <a href="index.html" class="px-5 py-2.5 rounded-full text-xs font-semibold text-white gradient-pill">Launch Gateway</a>
             </div>
         </div>
-    </nav>
+    </header>
 
     <!-- Main Content -->
-    <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
-
+    <main class="flex-1 max-w-5xl mx-auto px-6 py-10 w-full space-y-8">
+        
         <!-- Header -->
         <div class="pb-6 border-b border-white/[0.08]">
-            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-semibold mb-2">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-mono font-semibold mb-2">
                 <span>DEVELOPER QUICKSTART & INTEGRATION</span>
             </div>
-            <h1 class="text-3xl font-extrabold text-white tracking-tight">
-                Drop-in Integration <span class="font-serif italic text-purple-400 font-normal">in 2 Lines of Code</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Drop-in Integration <span class="bg-gradient-to-r from-pink-400 via-rose-300 to-purple-400 bg-clip-text text-transparent">in 2 Lines of Code</span>
             </h1>
-            <p class="text-slate-400 text-sm font-light mt-1">
+            <p class="text-slate-400 text-sm mt-1">
                 HeimdallCache adheres to standard OpenAI and Bifrost gateway protocol specifications. No SDK rewrites required.
             </p>
         </div>
 
         <!-- Code Switcher Card -->
-        <div class="skiper-card rounded-3xl overflow-hidden shadow-2xl">
-            <div class="flex items-center justify-between px-6 py-4 bg-slate-950/80 border-b border-white/[0.06]">
-                <div class="flex items-center space-x-2">
-                    <button onclick="switchTab('python')" id="tab-python" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-purple-600 text-white transition">
+        <div class="glass-card rounded-3xl overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-between px-6 py-4 bg-[#0b0c10] border-b border-white/[0.06]">
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchTab('python')" id="tab-python" class="tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-white text-black transition">
                         Python (OpenAI SDK)
                     </button>
-                    <button onclick="switchTab('ts')" id="tab-ts" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white transition">
+                    <button onclick="switchTab('ts')" id="tab-ts" class="tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-[#14151a] text-slate-400 hover:text-white transition">
                         TypeScript
                     </button>
-                    <button onclick="switchTab('curl')" id="tab-curl" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white transition">
+                    <button onclick="switchTab('curl')" id="tab-curl" class="tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-[#14151a] text-slate-400 hover:text-white transition">
                         cURL
                     </button>
-                    <button onclick="switchTab('bifrost')" id="tab-bifrost" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white transition">
+                    <button onclick="switchTab('bifrost')" id="tab-bifrost" class="tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-[#14151a] text-slate-400 hover:text-white transition">
                         Bifrost Gateway Config
                     </button>
                 </div>
-                <button onclick="copySnippet()" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1.5 font-mono transition">
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <button onclick="copySnippet()" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1.5 font-mono transition bg-[#14151a] px-3 py-1.5 rounded-full border border-white/[0.08]">
+                    <i data-lucide="copy" class="w-3.5 h-3.5 text-pink-400"></i>
                     <span id="copy-btn-text">Copy</span>
                 </button>
             </div>
 
-            <div class="p-6 font-mono text-xs bg-slate-950/90 text-slate-200 overflow-x-auto leading-relaxed">
+            <div class="p-6 font-mono text-xs bg-[#070709] text-slate-200 overflow-x-auto leading-relaxed">
                 <!-- Python -->
                 <pre id="code-python" class="snippet block"><code>from openai import OpenAI
 
 # 1. Point client to HeimdallCache Gateway proxy
 client = OpenAI(
-    base_url="http://localhost:8000/v1",
+    base_url="https://heimdall-cache.onrender.com/v1", # or http://localhost:8000/v1
     api_key="none"  # Heimdall handles upstream keys
 )
 
@@ -154,103 +160,171 @@ response = client.chat.completions.create(
 
 # 3. Access verified content
 print(response.choices[0].message.content)
-</code></pre>
+# If vector decayed: Heimdall launched async Tavily probe, evicted stale price ($8),
+# and returned verified ground truth ($3 / $8 / $16) with 0 zombie hallucination.</code></pre>
 
                 <!-- TypeScript -->
                 <pre id="code-ts" class="snippet hidden"><code>import OpenAI from 'openai';
 
-// Point client to Heimdall proxy
+// 1. Point official OpenAI SDK to Heimdall Living Proxy
 const openai = new OpenAI({
-  baseURL: 'http://localhost:8000/v1',
-  apiKey: 'none'
+  baseURL: 'https://heimdall-cache.onrender.com/v1',
+  apiKey: 'none', // Handled by proxy
 });
 
 async function main() {
   const completion = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [{ role: 'user', content: 'What is the monthly pricing for Twitter X Premium?' }],
+    messages: [{ role: 'user', content: 'What is the current time complexity of QuickSort?' }],
+    model: 'gpt-4o',
   });
 
   console.log(completion.choices[0].message.content);
 }
 
-main();
-</code></pre>
+main();</code></pre>
 
                 <!-- cURL -->
-                <pre id="code-curl" class="snippet hidden"><code>curl -X POST http://localhost:8000/v1/chat/completions \
+                <pre id="code-curl" class="snippet hidden"><code>curl -X POST https://heimdall-cache.onrender.com/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-4o-mini",
+    "model": "bifrost-living-cache",
     "messages": [
-      {"role": "user", "content": "What is the monthly pricing for Twitter X Premium?"}
-    ]
-  }'
-</code></pre>
+      {
+        "role": "user",
+        "content": "What is Twitter Blue pricing in 2026?"
+      }
+    ],
+    "temperature": 0.0
+  }'</code></pre>
 
                 <!-- Bifrost Config -->
-                <pre id="code-bifrost" class="snippet hidden"><code># bifrost.yaml configuration
-gateways:
-  - name: "heimdall-living-proxy"
-    port: 8080
-    plugins:
-      - name: "heimdall_semantic_cache"
-        endpoint: "http://localhost:8000/v1/chat/completions"
-        invalidation_strategy: "tavily_delta_probe"
-        similarity_threshold: 0.85
-        freshness_threshold: 70
-</code></pre>
+                <pre id="code-bifrost" class="snippet hidden"><code># docker-compose.yml with Bifrost Gateway + Heimdall Living Cache sidecar
+version: '3.8'
+
+services:
+  bifrost-gateway:
+    image: ghcr.io/maxim-ai/bifrost:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - UPSTREAM_PROXY_URL=http://heimdall:8000/v1
+      - CACHE_PROVIDER=custom-living-cache
+
+  heimdall:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+      - SIMILARITY_THRESHOLD=0.85
+      - FRESHNESS_THRESHOLD=70.0</code></pre>
             </div>
         </div>
 
-        <!-- Headers Specification Reference -->
-        <div class="skiper-card rounded-3xl p-7 space-y-4">
-            <h3 class="text-base font-bold text-white flex items-center space-x-2">
-                <i data-lucide="tag" class="w-4 h-4 text-cyan-400"></i>
-                <span>Heimdall Telemetry Response Headers</span>
-            </h3>
-            <p class="text-xs text-slate-400 font-serif italic">Every response returned by Heimdall contains diagnostic inspection headers:</p>
+        <!-- API Reference Table -->
+        <div class="glass-card rounded-3xl p-8 space-y-6">
+            <div>
+                <h2 class="text-xl font-bold text-white tracking-tight">Core REST Endpoints</h2>
+                <p class="text-xs text-slate-400 mt-1">Conforms to OpenAI specification plus Heimdall living introspection endpoints.</p>
+            </div>
 
-            <div class="overflow-x-auto font-mono text-xs">
-                <table class="w-full text-left">
-                    <thead class="text-slate-500 uppercase text-[10px] border-b border-white/[0.06]">
-                        <tr>
-                            <th class="py-2.5 px-3">Header</th>
-                            <th class="py-2.5 px-3">Possible Values</th>
-                            <th class="py-2.5 px-3">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-white/[0.04]">
-                        <tr>
-                            <td class="py-2.5 px-3 text-purple-400 font-bold">X-Heimdall-Cache</td>
-                            <td class="py-2.5 px-3 text-emerald-400">HIT_VERIFIED, STALE_INVALIDATED, CACHE_MISS</td>
-                            <td class="py-2.5 px-3 text-slate-400">Result of vector lookup and Tavily drift verification.</td>
-                        </tr>
-                        <tr>
-                            <td class="py-2.5 px-3 text-purple-400 font-bold">X-Heimdall-Freshness-Score</td>
-                            <td class="py-2.5 px-3 text-cyan-400">0.0% to 100.0%</td>
-                            <td class="py-2.5 px-3 text-slate-400">Current factual accuracy score computed against live web ground truth.</td>
-                        </tr>
-                        <tr>
-                            <td class="py-2.5 px-3 text-purple-400 font-bold">X-Heimdall-Latency-MS</td>
-                            <td class="py-2.5 px-3 text-slate-300">e.g. 2.4 ms</td>
-                            <td class="py-2.5 px-3 text-slate-400">End-to-end proxy processing latency.</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="space-y-4">
+                <div class="p-4 rounded-2xl bg-[#0b0c10] border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-purple-950/80 text-purple-300 border border-purple-800/50">POST</span>
+                        <span class="font-mono text-sm text-white">/v1/chat/completions</span>
+                    </div>
+                    <span class="text-xs text-slate-400">OpenAI compatible chat completions with living vector cache</span>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-[#0b0c10] border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-800/50">GET</span>
+                        <span class="font-mono text-sm text-white">/api/cache/entries</span>
+                    </div>
+                    <span class="text-xs text-slate-400">Inspect living vector store, volatility tags, and half-lives</span>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-[#0b0c10] border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800/50">POST</span>
+                        <span class="font-mono text-sm text-white">/api/cache/probe/{entry_id}</span>
+                    </div>
+                    <span class="text-xs text-slate-400">Manually trigger an asynchronous Tavily delta-probe</span>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-[#0b0c10] border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-rose-950/80 text-rose-300 border border-rose-800/50">DELETE</span>
+                        <span class="font-mono text-sm text-white">/api/cache/entries/{entry_id}</span>
+                    </div>
+                    <span class="text-xs text-slate-400">Explicitly evict a poisoned or decaying vector</span>
+                </div>
             </div>
         </div>
 
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-white/[0.08] bg-slate-950/90 py-6 text-center text-xs text-slate-500 font-mono">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div>HeimdallCache — Built for the <span class="text-purple-400">Global AI Hackathon</span></div>
-            <div class="flex items-center space-x-4">
-                <span>Priority Track: <strong class="text-slate-300">Bifrost</strong></span>
+    <footer class="w-full border-t border-white/[0.08] bg-[#070709] py-14 text-slate-400 text-xs">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10">
+            <div class="md:col-span-5 space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 via-purple-600 to-indigo-500 flex items-center justify-center p-0.5">
+                        <div class="w-full h-full bg-[#070709] rounded-full flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-base font-bold text-white tracking-tight">HeimdallCache</span>
+                </div>
+                <p class="text-slate-400 text-xs leading-relaxed max-w-sm">
+                    The living semantic cache for Maxim Bifrost Gateway, powered by Tavily live internet grounding. Eliminating zombie vector rot in AI agents.
+                </p>
+                <div class="flex items-center space-x-2 text-[11px] font-mono text-emerald-400">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>ALL SYSTEMS OPERATIONAL • BIFROST SIDECAR ACTIVE</span>
+                </div>
+            </div>
+
+            <div class="md:col-span-7 grid grid-cols-3 gap-6 text-xs">
+                <div class="space-y-3">
+                    <span class="font-bold text-white uppercase font-mono tracking-wider text-[11px] block">Product</span>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="hover:text-white transition">Gateway Console</a></li>
+                        <li><a href="cache.html" class="hover:text-white transition">Living Vectors</a></li>
+                        <li><a href="analytics.html" class="hover:text-white transition">Telemetry Analytics</a></li>
+                        <li><a href="settings.html" class="hover:text-white transition">Engine Thresholds</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <span class="font-bold text-white uppercase font-mono tracking-wider text-[11px] block">Resources</span>
+                    <ul class="space-y-2">
+                        <li><a href="docs.html" class="hover:text-white transition">API Documentation</a></li>
+                        <li><a href="pitch.html" class="hover:text-white transition">Pitch Deck</a></li>
+                        <li><a href="https://github.com/sachinn-alt/heimdall-cache/blob/master/docker-compose.yml" target="_blank" class="hover:text-white transition">Docker Compose</a></li>
+                        <li><a href="https://tavily.com" target="_blank" class="hover:text-white transition">Tavily Search</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <span class="font-bold text-white uppercase font-mono tracking-wider text-[11px] block">Community</span>
+                    <ul class="space-y-2">
+                        <li><a href="https://github.com/sachinn-alt/heimdall-cache" target="_blank" class="hover:text-white transition">GitHub Stars</a></li>
+                        <li><a href="https://github.com/sachinn-alt/heimdall-cache/issues" target="_blank" class="hover:text-white transition">Report Issue</a></li>
+                        <li><a href="https://dev.to" target="_blank" class="hover:text-white transition">DEV Post</a></li>
+                        <li><a href="mailto:sachinsingh13112004@gmail.com" class="hover:text-white transition">Contact Author</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 pt-10 mt-10 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 font-mono">
+            <div>© 2026 HeimdallCache Project. Open source under Apache-2.0.</div>
+            <div class="mt-2 sm:mt-0 flex space-x-4">
+                <span>Priority Track: <strong>Bifrost</strong></span>
                 <span>•</span>
-                <span>Track Partner: <strong class="text-cyan-400">Tavily</strong></span>
+                <span>Track Partner: <strong>Tavily</strong></span>
             </div>
         </div>
     </footer>
@@ -262,23 +336,23 @@ gateways:
 
         function switchTab(tab) {
             activeTab = tab;
-            document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('bg-purple-600', 'text-white');
-                b.classList.add('bg-slate-900', 'text-slate-400');
+            document.querySelectorAll('.snippet').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = 'tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-[#14151a] text-slate-400 hover:text-white transition';
             });
-            document.getElementById('tab-' + tab).classList.add('bg-purple-600', 'text-white');
-            document.getElementById('tab-' + tab).classList.remove('bg-slate-900', 'text-slate-400');
 
-            document.querySelectorAll('.snippet').forEach(s => s.classList.add('hidden'));
-            document.getElementById('code-' + tab).classList.remove('hidden');
+            const activeEl = document.getElementById(`code-${tab}`);
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            if (activeEl) activeEl.classList.remove('hidden');
+            if (activeBtn) activeBtn.className = 'tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-white text-black transition';
         }
 
         function copySnippet() {
-            const text = document.getElementById('code-' + activeTab).innerText;
+            const text = document.getElementById(`code-${activeTab}`).innerText;
             navigator.clipboard.writeText(text);
-            const btn = document.getElementById('copy-btn-text');
-            btn.innerText = 'Copied!';
-            setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+            const label = document.getElementById('copy-btn-text');
+            label.innerText = 'Copied!';
+            setTimeout(() => label.innerText = 'Copy', 2000);
         }
     </script>
 </body>

@@ -13,118 +13,112 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-                        serif: ['"Instrument Serif"', '"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Host Grotesk"', 'system-ui', 'sans-serif'],
                         mono: ['"JetBrains Mono"', 'monospace'],
                     },
                     colors: {
-                        bifrost: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 950: '#1e0a3d' },
-                        tavily: { 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 950: '#082f49' }
+                        ground: '#070709',
+                        surface: '#111216',
+                        accentGreen: '#22c55e',
                     }
                 }
             }
         }
     </script>
+
+    <!-- Google Fonts: Host Grotesk + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         body {
-            background-color: #030712;
+            background-color: #070709;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+                radial-gradient(at 50% 0%, rgba(168, 85, 247, 0.14) 0px, transparent 60%),
+                radial-gradient(at 20% 30%, rgba(34, 197, 94, 0.08) 0px, transparent 50%),
+                radial-gradient(at 80% 40%, rgba(244, 63, 94, 0.10) 0px, transparent 55%),
+                radial-gradient(at 50% 85%, rgba(124, 58, 237, 0.12) 0px, transparent 65%);
             background-attachment: fixed;
+            color: #faf8f9;
+            font-family: 'Host Grotesk', system-ui, sans-serif;
         }
-        .skiper-card {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+
+        .glass-card {
+            background: rgba(17, 18, 22, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
         }
-        .shimmer-btn {
-            position: relative;
-            overflow: hidden;
+
+        .gradient-pill {
+            background: linear-gradient(135deg, #f43f5e 0%, #ec4899 45%, #a855f7 100%);
+            box-shadow: 0 0 25px -4px rgba(236, 72, 153, 0.5);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .glow-halo-purple {
-            box-shadow: 0 0 30px -5px rgba(124, 58, 237, 0.35);
+        .gradient-pill:hover {
+            box-shadow: 0 0 35px 2px rgba(236, 72, 153, 0.75);
+            transform: scale(1.02);
         }
     </style>
 </head>
-<body class="text-slate-100 min-h-screen font-sans selection:bg-purple-500 selection:text-white flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-pink-500 selection:text-white">
 
-    <!-- Top Navigation Bar -->
-    <nav class="border-b border-white/[0.08] bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-            <a href="./" class="flex items-center space-x-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform duration-300">
-                    <span class="text-lg">🌈</span>
-                </div>
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-purple-300 via-indigo-200 to-cyan-300 bg-clip-text text-transparent">HeimdallCache</span>
-                        <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-purple-950/80 text-purple-300 border border-purple-800/50">LIVE DEMO</span>
+    <!-- Header -->
+    <header class="w-full border-b border-white/[0.06] bg-[#070709]/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3 group">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-pink-500 via-purple-600 to-indigo-500 flex items-center justify-center p-0.5 shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform">
+                    <div class="w-full h-full bg-[#070709] rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
                     </div>
-                    <p class="text-[11px] text-slate-400 font-serif italic">The living gateway sentinel for Bifrost</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xl font-bold tracking-tight text-white">Heimdall</span>
+                    <span class="px-2 py-0.5 text-[9px] font-mono font-bold uppercase rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-800/40">Bifrost Native</span>
                 </div>
             </a>
 
-            <!-- Navigation Links -->
-            <div class="hidden md:flex items-center space-x-1 p-1 bg-slate-900/80 rounded-xl border border-white/[0.06]">
-                <a href="./" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                    <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-                    <span>Console</span>
-                </a>
-                <a href="./cache.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                    <i data-lucide="database" class="w-3.5 h-3.5"></i>
-                    <span>Living Vectors</span>
-                </a>
-                <a href="./analytics.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                    <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i>
-                    <span>Analytics</span>
-                </a>
-                <a href="./settings.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                    <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-                    <span>Thresholds</span>
-                </a>
-                <a href="./docs.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-                    <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-                    <span>API Docs</span>
-                </a>
-                <a href="./pitch.html" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30">
-                    <i data-lucide="presentation" class="w-3.5 h-3.5"></i>
-                    <span>Pitch Deck</span>
-                </a>
-            </div>
+            <nav class="hidden lg:flex items-center space-x-1 p-1 bg-[#121318]/90 rounded-2xl border border-white/[0.06]">
+                <a href="index.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Console</a>
+                <a href="cache.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Living Vectors</a>
+                <a href="analytics.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Analytics</a>
+                <a href="settings.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Thresholds</a>
+                <a href="docs.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">API Docs</a>
+                <a href="pitch.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-indigo-500/20 text-white border border-purple-500/40 shadow-sm transition">Pitch Deck</a>
+            </nav>
 
-            <div class="flex items-center space-x-3">
-                <a href="https://github.com/sachinn-alt/heimdall-cache" target="_blank" class="p-2 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-white/[0.08] rounded-xl transition-all hover:scale-105 active:scale-95" title="View Source on GitHub">
+            <div class="hidden sm:flex items-center space-x-3">
+                <a href="https://github.com/sachinn-alt/heimdall-cache" target="_blank" class="p-2 text-slate-400 hover:text-white bg-[#14151a] hover:bg-[#1a1c22] border border-white/[0.08] rounded-full transition-all hover:scale-105" title="GitHub">
                     <i data-lucide="github" class="w-4 h-4"></i>
                 </a>
+                <a href="index.html" class="px-5 py-2.5 rounded-full text-xs font-semibold text-white gradient-pill">Launch Gateway</a>
             </div>
         </div>
-    </nav>
+    </header>
 
     <!-- Main Content -->
-    <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-6">
-
+    <main class="flex-1 max-w-5xl mx-auto px-6 py-10 w-full space-y-6">
+        
         <!-- Deck Controls Header -->
         <div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
             <div class="flex items-center space-x-3">
-                <span class="px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-mono font-bold">
+                <span class="px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-mono font-bold">
                     INTERACTIVE PITCH DECK
                 </span>
                 <span id="slide-indicator" class="text-xs text-slate-400 font-mono">Slide 1 of 7</span>
             </div>
             <div class="flex items-center space-x-2">
-                <button onclick="prevSlide()" class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-white/[0.08] transition active:scale-95">
+                <button onclick="prevSlide()" class="p-2 bg-[#14151a] hover:bg-[#1a1c22] text-slate-300 rounded-full border border-white/[0.08] transition active:scale-95">
                     <i data-lucide="chevron-left" class="w-4 h-4"></i>
                 </button>
-                <button onclick="nextSlide()" class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl border border-white/[0.08] transition active:scale-95">
+                <button onclick="nextSlide()" class="p-2 bg-[#14151a] hover:bg-[#1a1c22] text-slate-300 rounded-full border border-white/[0.08] transition active:scale-95">
                     <i data-lucide="chevron-right" class="w-4 h-4"></i>
                 </button>
                 <span class="text-[11px] text-slate-500 font-mono hidden sm:inline ml-2">(Use ← → Arrow Keys)</span>
@@ -132,70 +126,70 @@
         </div>
 
         <!-- Progress Bar -->
-        <div class="w-full h-1 bg-slate-900 rounded-full overflow-hidden">
-            <div id="deck-progress" class="h-full bg-gradient-to-r from-purple-500 to-cyan-500 transition-all duration-300" style="width: 14.28%"></div>
+        <div class="w-full h-1 bg-[#14151a] rounded-full overflow-hidden">
+            <div id="deck-progress" class="h-full bg-gradient-to-r from-pink-500 via-rose-400 to-purple-500 transition-all duration-300" style="width: 14.28%"></div>
         </div>
 
         <!-- Slide Deck Container -->
-        <div class="skiper-card rounded-3xl p-8 sm:p-12 min-h-[480px] flex flex-col justify-between relative overflow-hidden glow-halo-purple">
+        <div class="glass-card rounded-3xl p-8 sm:p-12 min-h-[480px] flex flex-col justify-between relative overflow-hidden shadow-2xl">
             
-            <!-- Slide 1: Title -->
+            <!-- Slide 1 -->
             <div class="slide block space-y-6">
                 <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-700/50 text-purple-300 text-xs font-mono">
                     <span>🏆 GLOBAL AI HACKATHON SUBMISSION</span>
                 </div>
                 <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
-                    HeimdallCache <span class="text-3xl">🌈👁️</span><br>
-                    <span class="font-serif italic font-normal text-purple-400 text-3xl sm:text-5xl">The All-Seeing Living Semantic Cache</span>
+                    HeimdallCache <br>
+                    <span class="bg-gradient-to-r from-pink-400 via-rose-300 to-purple-400 bg-clip-text text-transparent">The All-Seeing Living Semantic Cache</span>
                 </h1>
-                <p class="text-lg text-slate-300 max-w-2xl font-light">
+                <p class="text-base sm:text-lg text-slate-300 max-w-2xl font-light leading-relaxed">
                     An enterprise-grade living semantic cache extension for the open-source <strong>Bifrost AI Gateway</strong>, powered by real-time <strong>Tavily Search</strong> delta-probes.
                 </p>
                 <div class="pt-4 flex flex-wrap gap-4 text-xs font-mono">
-                    <div class="px-3 py-1.5 rounded-lg bg-slate-950 border border-white/[0.08] text-slate-300">
+                    <div class="px-3.5 py-2 rounded-full bg-[#0b0c10] border border-white/[0.08] text-slate-300">
                         Priority Track: <strong class="text-purple-400">Open-Source Bifrost Gateway</strong>
                     </div>
-                    <div class="px-3 py-1.5 rounded-lg bg-slate-950 border border-white/[0.08] text-slate-300">
+                    <div class="px-3.5 py-2 rounded-full bg-[#0b0c10] border border-white/[0.08] text-slate-300">
                         Track Partner: <strong class="text-cyan-400">Stale-Answer Detector (Tavily)</strong>
                     </div>
                 </div>
             </div>
 
-            <!-- Slide 2: The Critical Industry Problem -->
+            <!-- Slide 2 -->
             <div class="slide hidden space-y-6">
                 <span class="text-xs font-mono uppercase tracking-wider text-rose-400 font-bold">01 / The Fatal Flaw</span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                    Semantic Caches <span class="font-serif italic text-rose-400 font-normal">Rot Silently</span>.
+                    Semantic Caches <span class="text-rose-400">Rot Silently</span>.
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-rose-900/30 space-y-2">
+                    <div class="bg-[#0b0c10] p-5 rounded-2xl border border-rose-900/30 space-y-2">
                         <div class="text-xl">💰</div>
                         <h3 class="font-bold text-white text-sm">Pricing Drift</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">Twitter X, Stripe, or cloud providers update prices. Gateway serves old cached prices with 0.98 similarity.</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">Twitter X, Stripe, or cloud provider raises prices. Traditional cache serves the old $8 rate forever with 0.98 similarity.</p>
                     </div>
-                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-rose-900/30 space-y-2">
+                    <div class="bg-[#0b0c10] p-5 rounded-2xl border border-rose-900/30 space-y-2">
                         <div class="text-xl">📦</div>
                         <h3 class="font-bold text-white text-sm">API Deprecations</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">SDK method deprecated in v2. Gateway serves v1 snippets, breaking customer production builds.</p>
                     </div>
-                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-rose-900/30 space-y-2">
+                    <div class="bg-[#0b0c10] p-5 rounded-2xl border border-rose-900/30 space-y-2">
                         <div class="text-xl">👔</div>
                         <h3 class="font-bold text-white text-sm">Leadership & Rules</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">New CEO appointed or regulatory compliance rules change. Static cache serves obsolete facts.</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">New CEO appointed or EU AI Act provisions update. Static vector cache serves obsolete facts.</p>
                     </div>
                 </div>
-                <p class="text-xs text-slate-400 font-serif italic pt-2">
+                <p class="text-xs text-slate-400 font-mono pt-2">
                     Operators are forced to either disable semantic caching entirely, or risk serving poisoned truths.
                 </p>
             </div>
 
-            <!-- Slide 3: The Architecture -->
+            <!-- Slide 3 -->
             <div class="slide hidden space-y-6">
                 <span class="text-xs font-mono uppercase tracking-wider text-purple-400 font-bold">02 / Architecture</span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                    A Living Sentinel <span class="font-serif italic text-purple-400 font-normal">Inside the Proxy</span>.
+                    A Living Sentinel <span class="bg-gradient-to-r from-pink-400 via-rose-300 to-purple-400 bg-clip-text text-transparent">Inside the Proxy</span>.
                 </h2>
-                <div class="bg-slate-950/80 p-5 rounded-2xl border border-white/[0.08] font-mono text-xs text-slate-300 leading-relaxed overflow-x-auto">
+                <div class="bg-[#0b0c10] p-5 rounded-2xl border border-white/[0.08] font-mono text-xs text-slate-300 leading-relaxed overflow-x-auto">
                     <pre><code>[Client / LLM App] ──► [Heimdall Gateway Proxy (:8000)]
                                   │
                       ┌───────────┴───────────┐
@@ -204,7 +198,7 @@
                       │
                       ▼
               [Entity Volatility Router]
-               ├── STATIC  (Math, Theory) ────────► ⚡ Instant Cache Hit (&lt; 5ms)
+               ├── STATIC  (Math, Theory) ────────► ⚡ Instant Cache Hit (&lt; 4.2ms)
                └── VOLATILE (Pricing, APIs, People)
                       │
                       ▼
@@ -212,26 +206,26 @@
                ├── Freshness &gt;= 70% ─────────────► ✅ Verified Hit with Live Sources
                └── Freshness &lt; 70%  ─────────────► 🚨 HOT-INVALIDATE &amp; Refresh Upstream</code></pre>
                 </div>
-                <p class="text-xs text-slate-400 font-light">
+                <p class="text-xs text-slate-400 font-mono">
                     Drop-in compatible with standard OpenAI and Bifrost gateway protocol specifications.
                 </p>
             </div>
 
-            <!-- Slide 4: Tavily Deep Integration -->
+            <!-- Slide 4 -->
             <div class="slide hidden space-y-6">
                 <span class="text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold">03 / Grounding Engine</span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                    Two-Tier <span class="font-serif italic text-cyan-400 font-normal">Contradiction Engine</span>.
+                    Two-Tier <span class="text-cyan-400">Contradiction Engine</span>.
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-cyan-900/30 space-y-2">
+                    <div class="bg-[#0b0c10] p-5 rounded-2xl border border-cyan-900/30 space-y-2">
                         <span class="text-xs font-mono text-cyan-400 font-bold">TIER 1 · FAST NUMERIC RADAR</span>
                         <h3 class="font-bold text-white text-sm">Targeted Entity Extraction</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">
                             Extracts dollar signs, version tags, and deprecation markers. Compares numeric claims against live Tavily search results.
                         </p>
                     </div>
-                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-cyan-900/30 space-y-2">
+                    <div class="bg-[#0b0c10] p-5 rounded-2xl border border-cyan-900/30 space-y-2">
                         <span class="text-xs font-mono text-cyan-400 font-bold">TIER 2 · SEMANTIC NLI INFERENCE</span>
                         <h3 class="font-bold text-white text-sm">Tavily Direct Answer Synthesis</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">
@@ -239,29 +233,29 @@
                         </p>
                     </div>
                 </div>
-                <p class="text-xs text-slate-400 font-serif italic pt-2">
+                <p class="text-xs text-slate-400 font-mono pt-2">
                     Elevates Tavily from a simple consumer search widget to mission-critical enterprise proxy infrastructure.
                 </p>
             </div>
 
-            <!-- Slide 5: Empirical Benchmarks -->
+            <!-- Slide 5 -->
             <div class="slide hidden space-y-6">
                 <span class="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold">04 / Performance</span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                    Sub-Millisecond Speed. <span class="font-serif italic text-emerald-400 font-normal">Zero Factual Rot</span>.
+                    Sub-Millisecond Speed. <span class="text-emerald-400">Zero Factual Rot</span>.
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 font-mono">
-                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-emerald-900/30 text-center">
+                    <div class="bg-[#0b0c10] p-5 rounded-2xl border border-emerald-900/30 text-center">
                         <div class="text-3xl font-black text-emerald-400">100%</div>
                         <div class="text-xs text-slate-400 mt-1 font-sans">Staleness Invalidation</div>
                         <p class="text-[10px] text-emerald-400/80 mt-2">All simulated drift caught</p>
                     </div>
-                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-emerald-900/30 text-center">
-                        <div class="text-3xl font-black text-white">&lt; 5 ms</div>
+                    <div class="bg-[#0b0c10] p-5 rounded-2xl border border-emerald-900/30 text-center">
+                        <div class="text-3xl font-black text-white">&lt; 4.2 ms</div>
                         <div class="text-xs text-slate-400 mt-1 font-sans">Verified Cache Latency</div>
                         <p class="text-[10px] text-slate-400 mt-2">vs 1,420ms upstream</p>
                     </div>
-                    <div class="bg-slate-950/70 p-5 rounded-2xl border border-emerald-900/30 text-center">
+                    <div class="bg-[#0b0c10] p-5 rounded-2xl border border-emerald-900/30 text-center">
                         <div class="text-3xl font-black text-cyan-400">68%+</div>
                         <div class="text-xs text-slate-400 mt-1 font-sans">Token Cost Reduction</div>
                         <p class="text-[10px] text-cyan-400/80 mt-2">Zero hallucination risk</p>
@@ -269,50 +263,50 @@
                 </div>
             </div>
 
-            <!-- Slide 6: Multi-Page Operator Surfaces -->
+            <!-- Slide 6 -->
             <div class="slide hidden space-y-6">
                 <span class="text-xs font-mono uppercase tracking-wider text-purple-400 font-bold">05 / Product Craft</span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                    Not a Prototype. <span class="font-serif italic text-purple-400 font-normal">A Full Platform</span>.
+                    Not a Prototype. <span class="bg-gradient-to-r from-pink-400 via-rose-300 to-purple-400 bg-clip-text text-transparent">A Full Platform</span>.
                 </h2>
                 <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-2 text-center text-xs">
-                    <div class="bg-slate-950/80 p-4 rounded-xl border border-white/[0.08]">
+                    <div class="bg-[#0b0c10] p-4 rounded-2xl border border-white/[0.08]">
                         <div class="text-purple-400 font-bold mb-1">⚡ Console</div>
                         <p class="text-[11px] text-slate-400">Live query playground & telemetry radar</p>
                     </div>
-                    <div class="bg-slate-950/80 p-4 rounded-xl border border-white/[0.08]">
+                    <div class="bg-[#0b0c10] p-4 rounded-2xl border border-white/[0.08]">
                         <div class="text-indigo-400 font-bold mb-1">🧠 Vectors</div>
                         <p class="text-[11px] text-slate-400">Living vector matrix with decay timers</p>
                     </div>
-                    <div class="bg-slate-950/80 p-4 rounded-xl border border-white/[0.08]">
+                    <div class="bg-[#0b0c10] p-4 rounded-2xl border border-white/[0.08]">
                         <div class="text-cyan-400 font-bold mb-1">📊 Analytics</div>
                         <p class="text-[11px] text-slate-400">Economics hub & interactive ROI calculator</p>
                     </div>
-                    <div class="bg-slate-950/80 p-4 rounded-xl border border-white/[0.08]">
+                    <div class="bg-[#0b0c10] p-4 rounded-2xl border border-white/[0.08]">
                         <div class="text-amber-400 font-bold mb-1">⚙️ Settings</div>
                         <p class="text-[11px] text-slate-400">Similarity & freshness cutoff sliders</p>
                     </div>
-                    <div class="bg-slate-950/80 p-4 rounded-xl border border-white/[0.08]">
+                    <div class="bg-[#0b0c10] p-4 rounded-2xl border border-white/[0.08]">
                         <div class="text-emerald-400 font-bold mb-1">📖 Docs</div>
                         <p class="text-[11px] text-slate-400">2-line drop-in SDK guides</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Slide 7: Conclusion -->
+            <!-- Slide 7 -->
             <div class="slide hidden space-y-6">
                 <span class="text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold">06 / Conclusion</span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                     The Winning Synthesis.
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
-                    <div class="p-6 rounded-2xl bg-purple-950/30 border border-purple-800/40 space-y-2">
+                    <div class="p-6 rounded-2xl bg-purple-950/20 border border-purple-800/40 space-y-2">
                         <h3 class="font-bold text-white text-base">For Bifrost (Priority Track)</h3>
                         <p class="text-xs text-slate-300 leading-relaxed">
                             Solves the hardest problem in semantic caching: cache invalidation. Adds SSE streaming, durable SQLite vector persistence, and drop-in proxy compatibility to open-source Bifrost.
                         </p>
                     </div>
-                    <div class="p-6 rounded-2xl bg-cyan-950/30 border border-cyan-800/40 space-y-2">
+                    <div class="p-6 rounded-2xl bg-cyan-950/20 border border-cyan-800/40 space-y-2">
                         <h3 class="font-bold text-white text-base">For Tavily (Track Partner)</h3>
                         <p class="text-xs text-slate-300 leading-relaxed">
                             Tavily becomes the live truth anchor safeguarding enterprise production workloads. Real-time freshness scoring, temporal filters, and 100% cited source attribution.
@@ -334,7 +328,7 @@
                     <span>Previous Slide</span>
                 </button>
                 <div class="flex space-x-1.5" id="slide-dots"></div>
-                <button onclick="nextSlide()" class="shimmer-btn px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-mono font-bold flex items-center space-x-1.5 transition">
+                <button onclick="nextSlide()" class="px-5 py-2 rounded-full text-xs font-mono font-bold text-white gradient-pill flex items-center space-x-1.5 transition">
                     <span>Next Slide</span>
                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                 </button>
@@ -345,13 +339,65 @@
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-white/[0.08] bg-slate-950/90 py-6 text-center text-xs text-slate-500 font-mono">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div>HeimdallCache — Built for the <span class="text-purple-400">Global AI Hackathon</span></div>
-            <div class="flex items-center space-x-4">
-                <span>Priority Track: <strong class="text-slate-300">Bifrost</strong></span>
+    <footer class="w-full border-t border-white/[0.08] bg-[#070709] py-14 text-slate-400 text-xs">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10">
+            <div class="md:col-span-5 space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 via-purple-600 to-indigo-500 flex items-center justify-center p-0.5">
+                        <div class="w-full h-full bg-[#070709] rounded-full flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-base font-bold text-white tracking-tight">HeimdallCache</span>
+                </div>
+                <p class="text-slate-400 text-xs leading-relaxed max-w-sm">
+                    The living semantic cache for Maxim Bifrost Gateway, powered by Tavily live internet grounding. Eliminating zombie vector rot in AI agents.
+                </p>
+                <div class="flex items-center space-x-2 text-[11px] font-mono text-emerald-400">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>ALL SYSTEMS OPERATIONAL • BIFROST SIDECAR ACTIVE</span>
+                </div>
+            </div>
+
+            <div class="md:col-span-7 grid grid-cols-3 gap-6 text-xs">
+                <div class="space-y-3">
+                    <span class="font-bold text-white uppercase font-mono tracking-wider text-[11px] block">Product</span>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="hover:text-white transition">Gateway Console</a></li>
+                        <li><a href="cache.html" class="hover:text-white transition">Living Vectors</a></li>
+                        <li><a href="analytics.html" class="hover:text-white transition">Telemetry Analytics</a></li>
+                        <li><a href="settings.html" class="hover:text-white transition">Engine Thresholds</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <span class="font-bold text-white uppercase font-mono tracking-wider text-[11px] block">Resources</span>
+                    <ul class="space-y-2">
+                        <li><a href="docs.html" class="hover:text-white transition">API Documentation</a></li>
+                        <li><a href="pitch.html" class="hover:text-white transition">Pitch Deck</a></li>
+                        <li><a href="https://github.com/sachinn-alt/heimdall-cache/blob/master/docker-compose.yml" target="_blank" class="hover:text-white transition">Docker Compose</a></li>
+                        <li><a href="https://tavily.com" target="_blank" class="hover:text-white transition">Tavily Search</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <span class="font-bold text-white uppercase font-mono tracking-wider text-[11px] block">Community</span>
+                    <ul class="space-y-2">
+                        <li><a href="https://github.com/sachinn-alt/heimdall-cache" target="_blank" class="hover:text-white transition">GitHub Stars</a></li>
+                        <li><a href="https://github.com/sachinn-alt/heimdall-cache/issues" target="_blank" class="hover:text-white transition">Report Issue</a></li>
+                        <li><a href="https://dev.to" target="_blank" class="hover:text-white transition">DEV Post</a></li>
+                        <li><a href="mailto:sachinsingh13112004@gmail.com" class="hover:text-white transition">Contact Author</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 pt-10 mt-10 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 font-mono">
+            <div>© 2026 HeimdallCache Project. Open source under Apache-2.0.</div>
+            <div class="mt-2 sm:mt-0 flex space-x-4">
+                <span>Priority Track: <strong>Bifrost</strong></span>
                 <span>•</span>
-                <span>Track Partner: <strong class="text-cyan-400">Tavily</strong></span>
+                <span>Track Partner: <strong>Tavily</strong></span>
             </div>
         </div>
     </footer>
@@ -381,7 +427,7 @@
             dotsContainer.innerHTML = '';
             for (let i = 0; i < totalSlides; i++) {
                 const dot = document.createElement('span');
-                dot.className = `w-2 h-2 rounded-full transition-all ${i === currentSlide ? 'bg-purple-400 w-4' : 'bg-slate-800'}`;
+                dot.className = `w-2 h-2 rounded-full transition-all ${i === currentSlide ? 'bg-pink-400 w-4' : 'bg-slate-800'}`;
                 dotsContainer.appendChild(dot);
             }
             lucide.createIcons();

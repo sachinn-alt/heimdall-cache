@@ -3,45 +3,45 @@
 {% block title %}Interactive API Docs & SDK Guides — HeimdallCache{% endblock %}
 
 {% block content %}
-<div class="space-y-8 max-w-5xl">
+<div class="space-y-8 max-w-5xl mx-auto">
 
     <!-- Header -->
     <div class="pb-6 border-b border-white/[0.08]">
-        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-semibold mb-2">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-mono font-semibold mb-2">
             <span>DEVELOPER QUICKSTART & INTEGRATION</span>
         </div>
-        <h1 class="text-3xl font-extrabold text-white tracking-tight">
-            Drop-in Integration <span class="font-serif italic text-purple-400 font-normal">in 2 Lines of Code</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+            Drop-in Integration <span class="bg-gradient-to-r from-pink-400 via-rose-300 to-purple-400 bg-clip-text text-transparent">in 2 Lines of Code</span>
         </h1>
-        <p class="text-slate-400 text-sm font-light mt-1">
+        <p class="text-slate-400 text-sm mt-1">
             HeimdallCache adheres to standard OpenAI and Bifrost gateway protocol specifications. No SDK rewrites required.
         </p>
     </div>
 
     <!-- Code Switcher Card -->
-    <div class="skiper-card rounded-3xl overflow-hidden shadow-2xl">
-        <div class="flex items-center justify-between px-6 py-4 bg-slate-950/80 border-b border-white/[0.06]">
-            <div class="flex items-center space-x-2">
-                <button onclick="switchTab('python')" id="tab-python" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-purple-600 text-white transition">
+    <div class="glass-card rounded-3xl overflow-hidden shadow-2xl">
+        <div class="flex items-center justify-between px-6 py-4 bg-[#0b0c10] border-b border-white/[0.06]">
+            <div class="flex flex-wrap gap-2">
+                <button onclick="switchTab('python')" id="tab-python" class="tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-white text-black transition">
                     Python (OpenAI SDK)
                 </button>
-                <button onclick="switchTab('ts')" id="tab-ts" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white transition">
+                <button onclick="switchTab('ts')" id="tab-ts" class="tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-[#14151a] text-slate-400 hover:text-white transition">
                     TypeScript
                 </button>
-                <button onclick="switchTab('curl')" id="tab-curl" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white transition">
+                <button onclick="switchTab('curl')" id="tab-curl" class="tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-[#14151a] text-slate-400 hover:text-white transition">
                     cURL
                 </button>
-                <button onclick="switchTab('bifrost')" id="tab-bifrost" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-900 text-slate-400 hover:text-white transition">
+                <button onclick="switchTab('bifrost')" id="tab-bifrost" class="tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-[#14151a] text-slate-400 hover:text-white transition">
                     Bifrost Gateway Config
                 </button>
             </div>
-            <button onclick="copySnippet()" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1.5 font-mono transition">
-                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <button onclick="copySnippet()" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1.5 font-mono transition bg-[#14151a] px-3 py-1.5 rounded-full border border-white/[0.08]">
+                <i data-lucide="copy" class="w-3.5 h-3.5 text-pink-400"></i>
                 <span id="copy-btn-text">Copy</span>
             </button>
         </div>
 
-        <div class="p-6 font-mono text-xs bg-slate-950/90 text-slate-200 overflow-x-auto leading-relaxed">
+        <div class="p-6 font-mono text-xs bg-[#070709] text-slate-200 overflow-x-auto leading-relaxed">
             <!-- Python -->
             <pre id="code-python" class="snippet block"><code>from openai import OpenAI
 
@@ -59,90 +59,106 @@ response = client.chat.completions.create(
 
 # 3. Access verified content
 print(response.choices[0].message.content)
-</code></pre>
+# If vector decayed: Heimdall launched async Tavily probe, evicted stale price ($8),
+# and returned verified ground truth ($3 / $8 / $16) with 0 zombie hallucination.</code></pre>
 
             <!-- TypeScript -->
             <pre id="code-ts" class="snippet hidden"><code>import OpenAI from 'openai';
 
-// Point client to Heimdall proxy
+// 1. Point official OpenAI SDK to Heimdall Living Proxy
 const openai = new OpenAI({
   baseURL: 'http://localhost:8000/v1',
-  apiKey: 'none'
+  apiKey: 'none', // Handled by proxy
 });
 
 async function main() {
   const completion = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [{ role: 'user', content: 'What is the monthly pricing for Twitter X Premium?' }],
+    messages: [{ role: 'user', content: 'What is the current time complexity of QuickSort?' }],
+    model: 'gpt-4o',
   });
 
   console.log(completion.choices[0].message.content);
 }
 
-main();
-</code></pre>
+main();</code></pre>
 
             <!-- cURL -->
             <pre id="code-curl" class="snippet hidden"><code>curl -X POST http://localhost:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "gpt-4o-mini",
+    "model": "bifrost-living-cache",
     "messages": [
-      {"role": "user", "content": "What is the monthly pricing for Twitter X Premium?"}
-    ]
-  }'
-</code></pre>
+      {
+        "role": "user",
+        "content": "What is Twitter Blue pricing in 2026?"
+      }
+    ],
+    "temperature": 0.0
+  }'</code></pre>
 
             <!-- Bifrost Config -->
-            <pre id="code-bifrost" class="snippet hidden"><code># bifrost.yaml configuration
-gateways:
-  - name: "heimdall-living-proxy"
-    port: 8080
-    plugins:
-      - name: "heimdall_semantic_cache"
-        endpoint: "http://localhost:8000/v1/chat/completions"
-        invalidation_strategy: "tavily_delta_probe"
-        similarity_threshold: 0.85
-        freshness_threshold: 70
-</code></pre>
+            <pre id="code-bifrost" class="snippet hidden"><code># docker-compose.yml with Bifrost Gateway + Heimdall Living Cache sidecar
+version: '3.8'
+
+services:
+  bifrost-gateway:
+    image: ghcr.io/maxim-ai/bifrost:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - UPSTREAM_PROXY_URL=http://heimdall:8000/v1
+      - CACHE_PROVIDER=custom-living-cache
+
+  heimdall:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+      - SIMILARITY_THRESHOLD=0.85
+      - FRESHNESS_THRESHOLD=70.0</code></pre>
         </div>
     </div>
 
-    <!-- Headers Specification Reference -->
-    <div class="skiper-card rounded-3xl p-7 space-y-4">
-        <h3 class="text-base font-bold text-white flex items-center space-x-2">
-            <i data-lucide="tag" class="w-4 h-4 text-cyan-400"></i>
-            <span>Heimdall Telemetry Response Headers</span>
-        </h3>
-        <p class="text-xs text-slate-400 font-serif italic">Every response returned by Heimdall contains diagnostic inspection headers:</p>
+    <!-- API Reference Table -->
+    <div class="glass-card rounded-3xl p-8 space-y-6">
+        <div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Core REST Endpoints</h2>
+            <p class="text-xs text-slate-400 mt-1">Conforms to OpenAI specification plus Heimdall living introspection endpoints.</p>
+        </div>
 
-        <div class="overflow-x-auto font-mono text-xs">
-            <table class="w-full text-left">
-                <thead class="text-slate-500 uppercase text-[10px] border-b border-white/[0.06]">
-                    <tr>
-                        <th class="py-2.5 px-3">Header</th>
-                        <th class="py-2.5 px-3">Possible Values</th>
-                        <th class="py-2.5 px-3">Description</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-white/[0.04]">
-                    <tr>
-                        <td class="py-2.5 px-3 text-purple-400 font-bold">X-Heimdall-Cache</td>
-                        <td class="py-2.5 px-3 text-emerald-400">HIT_VERIFIED, STALE_INVALIDATED, CACHE_MISS</td>
-                        <td class="py-2.5 px-3 text-slate-400">Result of vector lookup and Tavily drift verification.</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2.5 px-3 text-purple-400 font-bold">X-Heimdall-Freshness-Score</td>
-                        <td class="py-2.5 px-3 text-cyan-400">0.0% to 100.0%</td>
-                        <td class="py-2.5 px-3 text-slate-400">Current factual accuracy score computed against live web ground truth.</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2.5 px-3 text-purple-400 font-bold">X-Heimdall-Latency-MS</td>
-                        <td class="py-2.5 px-3 text-slate-300">e.g. 2.4 ms</td>
-                        <td class="py-2.5 px-3 text-slate-400">End-to-end proxy processing latency.</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="space-y-4">
+            <div class="p-4 rounded-2xl bg-[#0b0c10] border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center space-x-3">
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-purple-950/80 text-purple-300 border border-purple-800/50">POST</span>
+                    <span class="font-mono text-sm text-white">/v1/chat/completions</span>
+                </div>
+                <span class="text-xs text-slate-400">OpenAI compatible chat completions with living vector cache</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#0b0c10] border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center space-x-3">
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-800/50">GET</span>
+                    <span class="font-mono text-sm text-white">/api/cache/entries</span>
+                </div>
+                <span class="text-xs text-slate-400">Inspect living vector store, volatility tags, and half-lives</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#0b0c10] border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center space-x-3">
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800/50">POST</span>
+                    <span class="font-mono text-sm text-white">/api/cache/probe/{entry_id}</span>
+                </div>
+                <span class="text-xs text-slate-400">Manually trigger an asynchronous Tavily delta-probe</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-[#0b0c10] border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center space-x-3">
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-rose-950/80 text-rose-300 border border-rose-800/50">DELETE</span>
+                    <span class="font-mono text-sm text-white">/api/cache/entries/{entry_id}</span>
+                </div>
+                <span class="text-xs text-slate-400">Explicitly evict a poisoned or decaying vector</span>
+            </div>
         </div>
     </div>
 
@@ -155,23 +171,23 @@ gateways:
 
     function switchTab(tab) {
         activeTab = tab;
-        document.querySelectorAll('.tab-btn').forEach(b => {
-            b.classList.remove('bg-purple-600', 'text-white');
-            b.classList.add('bg-slate-900', 'text-slate-400');
+        document.querySelectorAll('.snippet').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.className = 'tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-[#14151a] text-slate-400 hover:text-white transition';
         });
-        document.getElementById('tab-' + tab).classList.add('bg-purple-600', 'text-white');
-        document.getElementById('tab-' + tab).classList.remove('bg-slate-900', 'text-slate-400');
 
-        document.querySelectorAll('.snippet').forEach(s => s.classList.add('hidden'));
-        document.getElementById('code-' + tab).classList.remove('hidden');
+        const activeEl = document.getElementById(`code-${tab}`);
+        const activeBtn = document.getElementById(`tab-${tab}`);
+        if (activeEl) activeEl.classList.remove('hidden');
+        if (activeBtn) activeBtn.className = 'tab-btn px-4 py-2 rounded-full text-xs font-mono font-bold bg-white text-black transition';
     }
 
     function copySnippet() {
-        const text = document.getElementById('code-' + activeTab).innerText;
+        const text = document.getElementById(`code-${activeTab}`).innerText;
         navigator.clipboard.writeText(text);
-        const btn = document.getElementById('copy-btn-text');
-        btn.innerText = 'Copied!';
-        setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+        const label = document.getElementById('copy-btn-text');
+        label.innerText = 'Copied!';
+        setTimeout(() => label.innerText = 'Copy', 2000);
     }
 </script>
 {% endblock %}

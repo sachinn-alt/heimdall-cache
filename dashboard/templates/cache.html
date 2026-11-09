@@ -8,19 +8,19 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/[0.08]">
         <div>
-            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-semibold mb-2">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-mono font-semibold mb-2">
                 <span>VECTOR MEMORY EXPLORER</span>
             </div>
-            <h1 class="text-3xl font-extrabold text-white tracking-tight">
-                Living Vector Memory & <span class="font-serif italic text-purple-400 font-normal">Invalidation Matrix</span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Living Vector Memory & <span class="bg-gradient-to-r from-pink-400 via-rose-300 to-purple-400 bg-clip-text text-transparent">Invalidation Matrix</span>
             </h1>
-            <p class="text-slate-400 text-sm font-light mt-1">
+            <p class="text-slate-400 text-sm mt-1">
                 Inspect every semantic vector cached in Heimdall, their volatility decay half-lives, and per-claim Tavily ground truth.
             </p>
         </div>
         <div class="flex items-center space-x-3">
-            <button onclick="window.location.reload()" class="shimmer-btn px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-white/[0.1] rounded-xl text-xs font-mono flex items-center space-x-2 transition active:scale-95">
-                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <button onclick="window.location.reload()" class="px-4 py-2 bg-[#14151a] hover:bg-[#1a1c22] text-slate-200 border border-white/[0.1] rounded-full text-xs font-mono flex items-center space-x-2 transition active:scale-95">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-pink-400"></i>
                 <span>Refresh Matrix</span>
             </button>
         </div>
@@ -29,29 +29,29 @@
     <!-- Filter & Search Bar -->
     <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-            <button onclick="filterTable('ALL')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-purple-600 text-white shadow-md shadow-purple-600/30 transition">
+            <button onclick="filterTable('ALL')" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold bg-white text-black shadow-md transition">
                 All ({{ entries|length }})
             </button>
-            <button onclick="filterTable('HIGH')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-900 text-amber-300 border border-amber-800/40 hover:bg-amber-950/40 transition">
+            <button onclick="filterTable('HIGH')" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#121318] text-amber-300 border border-amber-800/40 hover:bg-amber-950/40 transition">
                 High Volatility (Pricing/APIs)
             </button>
-            <button onclick="filterTable('STATIC')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-900 text-emerald-300 border border-emerald-800/40 hover:bg-emerald-950/40 transition">
+            <button onclick="filterTable('STATIC')" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#121318] text-emerald-300 border border-emerald-800/40 hover:bg-emerald-950/40 transition">
                 Static (Math/Theory)
             </button>
-            <button onclick="filterTable('DRIFT')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-900 text-rose-300 border border-rose-800/40 hover:bg-rose-950/40 transition">
+            <button onclick="filterTable('DRIFT')" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#121318] text-rose-300 border border-rose-800/40 hover:bg-rose-950/40 transition">
                 Drift Detected
             </button>
         </div>
         <div class="w-full sm:w-72">
-            <input type="text" id="search-input" onkeyup="searchVectors()" placeholder="Search cached prompts..." class="w-full bg-slate-950/80 border border-white/[0.1] rounded-xl px-3.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500 font-mono transition">
+            <input type="text" id="search-input" onkeyup="searchVectors()" placeholder="Search cached prompts..." class="w-full bg-[#0b0c10] border border-white/[0.1] rounded-full px-4 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500 font-mono transition">
         </div>
     </div>
 
     <!-- Vectors Table -->
-    <div class="skiper-card rounded-3xl overflow-hidden shadow-2xl">
+    <div class="glass-card rounded-3xl overflow-hidden shadow-2xl">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs text-slate-300">
-                <thead class="bg-slate-950/90 text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-white/[0.08]">
+                <thead class="bg-[#0b0c10] text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-white/[0.08]">
                     <tr>
                         <th class="py-4 px-6">Vector ID / Prompt</th>
                         <th class="py-4 px-4">Entity Type</th>
@@ -64,7 +64,7 @@
                 </thead>
                 <tbody id="matrix-body" class="divide-y divide-white/[0.04] font-mono">
                     {% for e in entries %}
-                    <tr class="hover:bg-slate-800/30 transition-colors vector-row" data-volatility="{{ e.max_volatility }}" data-status="{{ e.status }}">
+                    <tr class="hover:bg-white/[0.02] transition-colors vector-row" data-volatility="{{ e.max_volatility }}" data-status="{{ e.status }}">
                         <td class="py-4 px-6">
                             <div class="text-[10px] text-purple-400 font-mono mb-1">#{{ e.id }}</div>
                             <div class="font-sans font-medium text-slate-100 text-sm max-w-md truncate">{{ e.prompt }}</div>
@@ -72,7 +72,7 @@
                         </td>
                         <td class="py-4 px-4">
                             {% if e.claims %}
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-white/[0.06]">
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#14151a] text-slate-300 border border-white/[0.08]">
                                     {{ e.claims[0].entity_type }}
                                 </span>
                             {% else %}
@@ -81,15 +81,15 @@
                         </td>
                         <td class="py-4 px-4">
                             {% if e.max_volatility == 'HIGH' %}
-                                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800/60">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800/60">
                                     HIGH · 3D TTL
                                 </span>
                             {% elif e.max_volatility == 'STATIC' %}
-                                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800/60">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800/60">
                                     STATIC · ∞ TTL
                                 </span>
                             {% else %}
-                                <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#14151a] text-slate-300 border border-slate-700">
                                     MODERATE · 30D
                                 </span>
                             {% endif %}
@@ -126,11 +126,11 @@
                         </td>
                         <td class="py-4 px-6 text-right">
                             <div class="inline-flex items-center space-x-2">
-                                <button onclick="triggerProbe('{{ e.id }}')" class="px-3 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-800/50 rounded-xl text-xs font-sans font-semibold transition active:scale-95 flex items-center space-x-1">
+                                <button onclick="triggerProbe('{{ e.id }}')" class="px-3 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-800/50 rounded-full text-xs font-sans font-semibold transition active:scale-95 flex items-center space-x-1">
                                     <i data-lucide="crosshair" class="w-3 h-3"></i>
                                     <span>Tavily Probe</span>
                                 </button>
-                                <button onclick="evictVector('{{ e.id }}')" class="p-1.5 bg-slate-900 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-white/[0.08] hover:border-rose-800/50 rounded-xl transition" title="Evict Vector">
+                                <button onclick="evictVector('{{ e.id }}')" class="p-1.5 bg-[#14151a] hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-white/[0.08] hover:border-rose-800/50 rounded-full transition" title="Evict Vector">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                 </button>
                             </div>
