@@ -1,0 +1,341 @@
+{
+  "version": "20260304",
+  "runtime": "python",
+  "framework": "fastapi",
+  "runtimeVersion": {
+    "requested": "3.13",
+    "requestedSource": ".python-version",
+    "resolved": "3.13"
+  },
+  "dependencies": [
+    {
+      "name": "fastapi",
+      "type": "direct",
+      "scopes": [
+        "main"
+      ],
+      "requested": "fastapi>=0.115.0",
+      "resolved": "0.162.1",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "httpx",
+      "type": "direct",
+      "scopes": [
+        "main"
+      ],
+      "requested": "httpx>=0.27.0",
+      "resolved": "0.28.1",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "jinja2",
+      "type": "direct",
+      "scopes": [
+        "main"
+      ],
+      "requested": "jinja2>=3.1.4",
+      "resolved": "3.1.6",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "numpy",
+      "type": "direct",
+      "scopes": [
+        "main"
+      ],
+      "requested": "numpy>=1.26.0",
+      "resolved": "2.5.4",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "pydantic",
+      "type": "direct",
+      "scopes": [
+        "main"
+      ],
+      "requested": "pydantic>=2.8.0",
+      "resolved": "2.14.3",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "python-dotenv",
+      "type": "direct",
+      "scopes": [
+        "main"
+      ],
+      "requested": "python-dotenv>=1.0.0",
+      "resolved": "1.2.4",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "rich",
+      "type": "direct",
+      "scopes": [
+        "main"
+      ],
+      "requested": "rich>=13.7.0",
+      "resolved": "15.0.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "tavily-python",
+      "type": "direct",
+      "scopes": [
+        "main"
+      ],
+      "requested": "tavily-python>=0.5.0",
+      "resolved": "0.8.5",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "uvicorn",
+      "type": "direct",
+      "scopes": [
+        "main"
+      ],
+      "requested": "uvicorn>=0.30.0",
+      "resolved": "0.54.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "annotated-doc",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "0.0.5",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "annotated-types",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "0.8.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "anyio",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "4.16.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "certifi",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "2026.10.23",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "charset-normalizer",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "3.5.2",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "click",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "8.5.1",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "exceptiongroup",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "1.3.1",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "h11",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "0.16.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "httpcore",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "1.0.9",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "idna",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "3.20",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "markdown-it-py",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "4.2.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "markupsafe",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "3.0.4",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "mdurl",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "0.1.2",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "opentelemetry-api",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "1.45.2",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "pydantic-core",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "2.50.4",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "pygments",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "2.21.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "regex",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "2026.11.7",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "requests",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "2.34.2",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "starlette",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "1.10.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "tiktoken",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "0.14.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "typing-extensions",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "4.16.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "typing-inspection",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "0.4.5",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    },
+    {
+      "name": "urllib3",
+      "type": "transitive",
+      "scopes": [
+        "main"
+      ],
+      "resolved": "2.8.0",
+      "source": "registry",
+      "sourceUrl": "https://pypi.org"
+    }
+  ]
+}

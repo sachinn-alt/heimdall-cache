@@ -1,0 +1,42 @@
+{
+  "version": 3,
+  "daemons": {},
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "^/v1(?:/(.*))$",
+      "dest": "https://heimdall-cache.onrender.com/v1/$1",
+      "check": true
+    },
+    {
+      "src": "^/api(?:/(.*))$",
+      "dest": "https://heimdall-cache.onrender.com/api/$1",
+      "check": true
+    },
+    {
+      "handle": "error"
+    },
+    {
+      "status": 404,
+      "src": "^(?!/api).*$",
+      "dest": "/404.html"
+    },
+    {
+      "handle": "rewrite"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/fastapi",
+      "transforms": [
+        {
+          "type": "request.path",
+          "op": "set",
+          "args": "/$1"
+        }
+      ]
+    }
+  ],
+  "crons": []
+}

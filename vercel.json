@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/v1/(.*)",
+      "destination": "https://heimdall-cache.onrender.com/v1/$1"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "https://heimdall-cache.onrender.com/api/$1"
+    },
+    {
+      "source": "/cache",
+      "destination": "/cache.html"
+    },
+    {
+      "source": "/analytics",
+      "destination": "/analytics.html"
+    },
+    {
+      "source": "/settings",
+      "destination": "/settings.html"
+    },
+    {
+      "source": "/docs",
+      "destination": "/docs.html"
+    },
+    {
+      "source": "/pitch",
+      "destination": "/pitch.html"
+    }
+  ]
+}
