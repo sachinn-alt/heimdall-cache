@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="heimdall-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ec4899"/>
+      <stop offset="50%" stop-color="#9333ea"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="top-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle with neon gradient rim -->
+  <circle cx="16" cy="16" r="15" fill="#070709" stroke="url(#heimdall-grad)" stroke-width="1.8"/>
+  <!-- Stacked Living Vector Layers -->
+  <g transform="translate(4, 4)" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top Layer -->
+    <path d="M12 2L2 7l10 5 10-5-10-5z" fill="url(#top-grad)" stroke="#ffffff" stroke-width="2"/>
+    <!-- Middle Layer -->
+    <path d="M2 12l10 5 10-5" fill="none" stroke="#c084fc" stroke-width="2"/>
+    <!-- Bottom Layer (Tavily Emerald) -->
+    <path d="M2 17l10 5 10-5" fill="none" stroke="#22c55e" stroke-width="2"/>
+  </g>
+</svg>

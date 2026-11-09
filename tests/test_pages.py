@@ -31,6 +31,13 @@ def test_all_pages_and_features():
         assert expected_text in response.text, f"Text '{expected_text}' not found in {path}"
         print(f"✓ Page {path} rendered with 200 OK")
 
+    # Test Favicon endpoints
+    ico_resp = client.get("/favicon.ico")
+    assert ico_resp.status_code == 200 and len(ico_resp.content) > 0
+    svg_resp = client.get("/favicon.svg")
+    assert svg_resp.status_code == 200 and "svg" in svg_resp.text
+    print("✓ Favicon endpoints (/favicon.ico, /favicon.svg) returned 200 OK")
+
     # Test SQLite persistence
     persisted = db_storage.load_all_entries()
     assert len(persisted) > 0
