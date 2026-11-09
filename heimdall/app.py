@@ -52,6 +52,7 @@ def get_base_context(request: Request, current_page: str):
 # ================= PAGES =================
 
 @app.get("/", response_class=HTMLResponse)
+@app.get("/index.html", response_class=HTMLResponse)
 async def page_dashboard(request: Request):
     """Page 1: Live Radar & Gateway Console Playground"""
     ctx = get_base_context(request, "dashboard")
@@ -59,6 +60,7 @@ async def page_dashboard(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context=ctx)
 
 @app.get("/cache", response_class=HTMLResponse)
+@app.get("/cache.html", response_class=HTMLResponse)
 async def page_cache_explorer(request: Request):
     """Page 2: Living Vector Memory & Invalidation Matrix"""
     ctx = get_base_context(request, "cache")
@@ -66,24 +68,28 @@ async def page_cache_explorer(request: Request):
     return templates.TemplateResponse(request=request, name="cache.html", context=ctx)
 
 @app.get("/analytics", response_class=HTMLResponse)
+@app.get("/analytics.html", response_class=HTMLResponse)
 async def page_analytics(request: Request):
     """Page 3: Drift & Cost Avoidance Analytics Hub"""
     ctx = get_base_context(request, "analytics")
     return templates.TemplateResponse(request=request, name="analytics.html", context=ctx)
 
 @app.get("/settings", response_class=HTMLResponse)
+@app.get("/settings.html", response_class=HTMLResponse)
 async def page_settings(request: Request):
     """Page 4: Bifrost Gateway & Tavily Configuration Engine"""
     ctx = get_base_context(request, "settings")
     return templates.TemplateResponse(request=request, name="settings.html", context=ctx)
 
 @app.get("/docs", response_class=HTMLResponse)
+@app.get("/docs.html", response_class=HTMLResponse)
 async def page_docs(request: Request):
     """Page 5: Interactive API Reference & SDK Guides"""
     ctx = get_base_context(request, "docs")
     return templates.TemplateResponse(request=request, name="docs.html", context=ctx)
 
 @app.get("/pitch", response_class=HTMLResponse)
+@app.get("/pitch.html", response_class=HTMLResponse)
 async def page_pitch(request: Request):
     """Page 6: Interactive Pitch Deck & Presentation Slides"""
     ctx = get_base_context(request, "pitch")

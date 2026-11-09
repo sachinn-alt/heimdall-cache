@@ -12,11 +12,17 @@ def test_all_pages_and_features():
     
     pages = [
         ("/", "Console"),
+        ("/index.html", "Console"),
         ("/cache", "Living Vector Memory"),
+        ("/cache.html", "Living Vector Memory"),
         ("/analytics", "The Economics of"),
+        ("/analytics.html", "The Economics of"),
         ("/settings", "Thresholds & Control Plane"),
+        ("/settings.html", "Thresholds & Control Plane"),
         ("/docs", "OpenAI"),
+        ("/docs.html", "OpenAI"),
         ("/pitch", "INTERACTIVE PITCH DECK"),
+        ("/pitch.html", "INTERACTIVE PITCH DECK"),
     ]
 
     for path, expected_text in pages:
