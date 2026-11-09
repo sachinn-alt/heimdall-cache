@@ -3,7 +3,7 @@ import time
 from pathlib import Path
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -94,6 +94,36 @@ async def page_pitch(request: Request):
     """Page 6: Interactive Pitch Deck & Presentation Slides"""
     ctx = get_base_context(request, "pitch")
     return templates.TemplateResponse(request=request, name="pitch.html", context=ctx)
+
+# ================= STATIC FAVICONS =================
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon_ico():
+    ico_path = BASE_DIR / "favicon.ico"
+    if ico_path.exists():
+        return FileResponse(ico_path, media_type="image/x-icon")
+    return Response(status_code=404)
+
+@app.get("/favicon.svg", include_in_schema=False)
+async def favicon_svg():
+    svg_path = BASE_DIR / "favicon.svg"
+    if svg_path.exists():
+        return FileResponse(svg_path, media_type="image/svg+xml")
+    return Response(status_code=404)
+
+@app.get("/favicon.png", include_in_schema=False)
+async def favicon_png():
+    png_path = BASE_DIR / "favicon.png"
+    if png_path.exists():
+        return FileResponse(png_path, media_type="image/png")
+    return Response(status_code=404)
+
+@app.get("/apple-touch-icon.png", include_in_schema=False)
+async def apple_touch_icon():
+    touch_path = BASE_DIR / "apple-touch-icon.png"
+    if touch_path.exists():
+        return FileResponse(touch_path, media_type="image/png")
+    return Response(status_code=404)
 
 # ================= API ENDPOINTS =================
 
