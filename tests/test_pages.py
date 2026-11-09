@@ -38,6 +38,12 @@ def test_all_pages_and_features():
     assert svg_resp.status_code == 200 and "svg" in svg_resp.text
     print("✓ Favicon endpoints (/favicon.ico, /favicon.svg) returned 200 OK")
 
+    # Test Custom 404 Page
+    not_found_resp = client.get("/non-existent-neural-path")
+    assert not_found_resp.status_code == 404
+    assert "Vector Coordinate Decayed in Living Memory" in not_found_resp.text
+    print("✓ Custom 404 Error page rendered with status 404")
+
     # Test SQLite persistence
     persisted = db_storage.load_all_entries()
     assert len(persisted) > 0

@@ -95,6 +95,18 @@ async def page_pitch(request: Request):
     ctx = get_base_context(request, "pitch")
     return templates.TemplateResponse(request=request, name="pitch.html", context=ctx)
 
+@app.get("/404", response_class=HTMLResponse)
+@app.get("/404.html", response_class=HTMLResponse)
+async def page_404(request: Request):
+    """Custom 404 Error Page"""
+    return templates.TemplateResponse(request=request, name="404.html", context={"request": request}, status_code=404)
+
+@app.exception_handler(404)
+async def not_found_exception_handler(request: Request, exc):
+    if request.url.path.startswith(("/v1", "/api")):
+        return JSONResponse(status_code=404, content={"detail": "Not Found", "path": request.url.path})
+    return templates.TemplateResponse(request=request, name="404.html", context={"request": request}, status_code=404)
+
 # ================= STATIC FAVICONS =================
 
 @app.get("/favicon.ico", include_in_schema=False)
