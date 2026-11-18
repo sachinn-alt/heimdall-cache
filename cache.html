@@ -11,60 +11,51 @@
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Host Grotesk"', 'system-ui', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
-                    },
-                    colors: {
-                        ground: '#070709',
-                        surface: '#111216',
-                        accentGreen: '#22c55e',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Google Fonts: Host Grotesk + JetBrains Mono -->
+    <!-- Preconnect Hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <!-- Precompiled Minified Tailwind CSS (instant paint, zero JS JIT delay) -->
+    <link rel="stylesheet" href="styles.css">
 
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Host Grotesk + JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Lucide Icons (deferred) -->
+    <script async src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js" onload="window.lucide&&lucide.createIcons()"></script>
 
     <style>
         body {
             background-color: #070709;
-            background-image: 
-                radial-gradient(at 50% 0%, rgba(168, 85, 247, 0.14) 0px, transparent 60%),
-                radial-gradient(at 20% 30%, rgba(34, 197, 94, 0.08) 0px, transparent 50%),
-                radial-gradient(at 80% 40%, rgba(244, 63, 94, 0.10) 0px, transparent 55%),
-                radial-gradient(at 50% 85%, rgba(124, 58, 237, 0.12) 0px, transparent 65%);
-            background-attachment: fixed;
             color: #faf8f9;
             font-family: 'Host Grotesk', system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-image:
+                radial-gradient(at 50% 0%, rgba(168, 85, 247, 0.14) 0px, transparent 58%),
+                radial-gradient(at 20% 30%, rgba(34, 197, 94, 0.08) 0px, transparent 48%),
+                radial-gradient(at 80% 40%, rgba(244, 63, 94, 0.09) 0px, transparent 52%);
+            transform: translateZ(0);
         }
 
         .glass-card {
-            background: rgba(17, 18, 22, 0.75);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            background: rgba(17, 18, 22, 0.82);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.65);
         }
 
         .gradient-pill {
             background: linear-gradient(135deg, #f43f5e 0%, #ec4899 45%, #a855f7 100%);
             box-shadow: 0 0 25px -4px rgba(236, 72, 153, 0.5);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .gradient-pill:hover {
             box-shadow: 0 0 35px 2px rgba(236, 72, 153, 0.75);
@@ -73,9 +64,10 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-pink-500 selection:text-white">
+    <div class="ambient-bg" aria-hidden="true"></div>
 
     <!-- Header -->
-    <header class="w-full border-b border-white/[0.06] bg-[#070709]/80 backdrop-blur-xl sticky top-0 z-50">
+    <header class="w-full border-b border-white/[0.06] bg-[#070709]/85 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="index.html" class="flex items-center space-x-3 group">
                 <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-pink-500 via-purple-600 to-indigo-500 flex items-center justify-center p-0.5 shadow-lg shadow-purple-500/30 group-hover:scale-105 transition-transform">
@@ -145,7 +137,7 @@
                 </p>
             </div>
             <div class="flex items-center space-x-3">
-                <button onclick="window.location.reload()" class="px-4 py-2 bg-[#14151a] hover:bg-[#1a1c22] text-slate-200 border border-white/[0.1] rounded-full text-xs font-mono flex items-center space-x-2 transition active:scale-95">
+                <button id="refresh-btn" onclick="loadLiveEntries()" class="px-4 py-2 bg-[#14151a] hover:bg-[#1a1c22] text-slate-200 border border-white/[0.1] rounded-full text-xs font-mono flex items-center space-x-2 transition active:scale-95">
                     <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-pink-400"></i>
                     <span>Refresh Matrix</span>
                 </button>
@@ -155,16 +147,16 @@
         <!-- Filter & Search Bar -->
         <div class="flex flex-col sm:flex-row gap-3 items-center justify-between">
             <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                <button onclick="filterTable('ALL')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-semibold bg-white text-black shadow-md transition">
-                    All (5)
+                <button id="filter-ALL" onclick="filterTable('ALL')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-semibold bg-white text-black shadow-md transition">
+                    All (<span id="count-all">3</span>)
                 </button>
-                <button onclick="filterTable('HIGH')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#121318] text-amber-300 border border-amber-800/40 hover:bg-amber-950/40 transition">
+                <button id="filter-HIGH" onclick="filterTable('HIGH')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#121318] text-amber-300 border border-amber-800/40 hover:bg-amber-950/40 transition">
                     High Volatility (Pricing/APIs)
                 </button>
-                <button onclick="filterTable('STATIC')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#121318] text-emerald-300 border border-emerald-800/40 hover:bg-emerald-950/40 transition">
+                <button id="filter-STATIC" onclick="filterTable('STATIC')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#121318] text-emerald-300 border border-emerald-800/40 hover:bg-emerald-950/40 transition">
                     Static (Math/Theory)
                 </button>
-                <button onclick="filterTable('DRIFT')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#121318] text-rose-300 border border-rose-800/40 hover:bg-rose-950/40 transition">
+                <button id="filter-DRIFT" onclick="filterTable('DRIFT')" class="filter-btn px-4 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#121318] text-rose-300 border border-rose-800/40 hover:bg-rose-950/40 transition">
                     Drift Detected
                 </button>
             </div>
@@ -356,7 +348,15 @@
     </footer>
 
     <script>
-        lucide.createIcons();
+        const IS_LOCAL_OR_RENDER = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+            || window.location.hostname.includes('onrender.com');
+        const API_BASE = IS_LOCAL_OR_RENDER ? '' : 'https://heimdall-cache.onrender.com';
+        let activeFilter = 'ALL';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+            loadLiveEntries();
+        });
 
         // Mobile drawer toggle
         const menuBtn = document.getElementById('mobile-menu-btn');
@@ -365,7 +365,137 @@
             mobileMenu.classList.toggle('hidden');
         });
 
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+        }
+
+        function renderRows(entries) {
+            const tbody = document.getElementById('matrix-body');
+            if (!tbody || !Array.isArray(entries) || entries.length === 0) return;
+
+            const activeEntries = entries.filter(e => e.status !== 'EVICTED');
+            const countEl = document.getElementById('count-all');
+            if (countEl) countEl.innerText = activeEntries.length;
+
+            tbody.innerHTML = activeEntries.map(e => {
+                const vol = e.max_volatility || 'MODERATE';
+                const status = e.status || 'HEALTHY';
+                const fresh = typeof e.overall_freshness === 'number' ? e.overall_freshness.toFixed(1) : '95.0';
+                const freshNum = parseFloat(fresh);
+                const entityType = (e.claims && e.claims[0] && e.claims[0].entity_type) || (vol === 'STATIC' ? 'MATH/ALGO' : 'GENERAL');
+
+                const volBadge = vol === 'HIGH'
+                    ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800/60">HIGH · 3D TTL</span>`
+                    : vol === 'STATIC'
+                        ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800/60">STATIC · ∞ TTL</span>`
+                        : `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-800/60">MOD · 30D TTL</span>`;
+
+                const barColor = freshNum < 70 ? 'bg-rose-500' : 'bg-emerald-500';
+                const txtColor = freshNum < 70 ? 'text-rose-400' : 'text-emerald-400';
+
+                const statusBadge = status === 'DRIFT_DETECTED'
+                    ? `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-950/80 text-rose-300 border border-rose-800/60 inline-flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span><span>DRIFT DETECTED</span></span>`
+                    : `<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 inline-flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>HEALTHY</span></span>`;
+
+                return `<tr class="hover:bg-white/[0.02] transition-colors vector-row" data-id="${escapeHtml(e.id)}" data-volatility="${escapeHtml(vol)}" data-status="${escapeHtml(status)}">
+                    <td class="py-4 px-6">
+                        <div class="text-[10px] text-purple-400 font-mono mb-1">#${escapeHtml(e.id)}</div>
+                        <div class="font-sans font-medium text-slate-100 text-sm max-w-md truncate">${escapeHtml(e.prompt)}</div>
+                        <div class="text-slate-400 font-sans text-xs mt-1 truncate max-w-md">${escapeHtml(e.response_text)}</div>
+                    </td>
+                    <td class="py-4 px-4"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#14151a] text-slate-300 border border-white/[0.08]">${escapeHtml(entityType)}</span></td>
+                    <td class="py-4 px-4">${volBadge}</td>
+                    <td class="py-4 px-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-sm ${txtColor}">${fresh}%</span>
+                            <div class="w-12 h-1.5 rounded-full bg-slate-800 overflow-hidden"><div class="h-full ${barColor}" style="width: ${Math.min(100, Math.max(0, freshNum))}%"></div></div>
+                        </div>
+                    </td>
+                    <td class="py-4 px-4 text-slate-400 font-bold">${e.hit_count || 0}</td>
+                    <td class="py-4 px-4">${statusBadge}</td>
+                    <td class="py-4 px-6 text-right space-x-2 whitespace-nowrap">
+                        <button onclick="probeEntry('${escapeHtml(e.id)}', this)" class="px-2.5 py-1 rounded-lg bg-purple-950/60 hover:bg-purple-800/60 text-purple-200 border border-purple-700/50 text-[10px] font-mono transition">Probe</button>
+                        <button onclick="evictEntry('${escapeHtml(e.id)}', this)" class="px-2.5 py-1 rounded-lg bg-rose-950/50 hover:bg-rose-800/60 text-rose-300 border border-rose-800/40 text-[10px] font-mono transition">Evict</button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            filterTable(activeFilter);
+        }
+
+        async function loadLiveEntries() {
+            const btn = document.getElementById('refresh-btn');
+            if (btn) btn.classList.add('opacity-70');
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 3500);
+            try {
+                const res = await fetch(`${API_BASE}/api/cache/entries?limit=50`, { signal: controller.signal });
+                clearTimeout(timer);
+                if (res.ok) {
+                    const data = await res.json();
+                    renderRows(data);
+                }
+            } catch (_) {
+                clearTimeout(timer);
+            } finally {
+                if (btn) btn.classList.remove('opacity-70');
+            }
+        }
+
+        async function probeEntry(entryId, btn) {
+            if (!btn) return;
+            btn.disabled = true;
+            btn.innerText = 'Probing...';
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 6500);
+            try {
+                const res = await fetch(`${API_BASE}/api/cache/probe/${encodeURIComponent(entryId)}`, {
+                    method: 'POST',
+                    signal: controller.signal
+                });
+                clearTimeout(timer);
+                if (res.ok) {
+                    await loadLiveEntries();
+                    return;
+                }
+            } catch (_) {
+                clearTimeout(timer);
+            }
+            btn.disabled = false;
+            btn.innerText = 'Probed';
+        }
+
+        async function evictEntry(entryId, btn) {
+            if (btn) { btn.disabled = true; btn.innerText = '...'; }
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 3500);
+            try {
+                await fetch(`${API_BASE}/api/cache/entries/${encodeURIComponent(entryId)}`, {
+                    method: 'DELETE',
+                    signal: controller.signal
+                });
+                clearTimeout(timer);
+            } catch (_) {
+                clearTimeout(timer);
+            }
+            const row = document.querySelector(`tr[data-id="${CSS.escape(entryId)}"]`);
+            if (row) row.remove();
+            const countEl = document.getElementById('count-all');
+            if (countEl) countEl.innerText = document.querySelectorAll('.vector-row').length;
+        }
+
         function filterTable(filter) {
+            activeFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-black', 'shadow-md');
+                btn.classList.add('bg-[#121318]');
+            });
+            const activeBtn = document.getElementById(`filter-${filter}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-[#121318]');
+                activeBtn.classList.add('bg-white', 'text-black', 'shadow-md');
+            }
+
             const rows = document.querySelectorAll('.vector-row');
             rows.forEach(r => {
                 const vol = r.getAttribute('data-volatility');

@@ -3,8 +3,9 @@ import sqlite3
 import logging
 import os
 import tempfile
+import threading
 from pathlib import Path
-from typing import Dict, Optional, List
+from typing import Dict, Optional
 from .models import CacheEntry, Claim
 
 logger = logging.getLogger("heimdall.storage")
@@ -18,26 +19,41 @@ elif os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
 else:
     DB_PATH = Path(__file__).resolve().parent.parent / "heimdall_cache.db"
 
+
 class SQLiteVectorStorage:
+    """
+    High-throughput SQLite persistence with WAL mode, NORMAL sync,
+    and a persistent thread-safe connection to eliminate per-query open/close overhead.
+    """
+
     def __init__(self, db_path: Path = DB_PATH):
         self.db_path = str(db_path)
+        self._lock = threading.Lock()
+        self._conn: Optional[sqlite3.Connection] = None
         try:
             self._init_db()
         except sqlite3.OperationalError:
-            # Fallback to temp directory if host filesystem is read-only
             fallback = Path(tempfile.gettempdir()) / "heimdall_cache.db"
             self.db_path = str(fallback)
+            self._conn = None
             self._init_db()
         except Exception as e:
             logger.error(f"Failed to initialize SQLite at {self.db_path}: {e}")
 
     def _get_connection(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(self.db_path)
-        conn.row_factory = sqlite3.Row
-        return conn
+        if self._conn is None:
+            conn = sqlite3.connect(self.db_path, check_same_thread=False, timeout=5.0)
+            conn.row_factory = sqlite3.Row
+            conn.execute("PRAGMA journal_mode=WAL;")
+            conn.execute("PRAGMA synchronous=NORMAL;")
+            conn.execute("PRAGMA temp_store=MEMORY;")
+            conn.execute("PRAGMA cache_size=-8000;")
+            self._conn = conn
+        return self._conn
 
     def _init_db(self):
-        with self._get_connection() as conn:
+        with self._lock:
+            conn = self._get_connection()
             cursor = conn.cursor()
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS cache_vectors (
@@ -69,9 +85,10 @@ class SQLiteVectorStorage:
 
     def save_entry(self, entry: CacheEntry):
         try:
-            with self._get_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
+            with self._lock:
+                conn = self._get_connection()
+                conn.execute(
+                    """
                     INSERT INTO cache_vectors (
                         id, prompt, response_text, embedding, created_at,
                         last_verified_at, hit_count, claims_json, max_volatility,
@@ -87,19 +104,21 @@ class SQLiteVectorStorage:
                         max_volatility = excluded.max_volatility,
                         overall_freshness = excluded.overall_freshness,
                         status = excluded.status
-                """, (
-                    entry.id,
-                    entry.prompt,
-                    entry.response_text,
-                    json.dumps(entry.embedding),
-                    entry.created_at,
-                    entry.last_verified_at,
-                    entry.hit_count,
-                    json.dumps([c.model_dump() for c in entry.claims]),
-                    entry.max_volatility,
-                    entry.overall_freshness,
-                    entry.status
-                ))
+                    """,
+                    (
+                        entry.id,
+                        entry.prompt,
+                        entry.response_text,
+                        json.dumps(entry.embedding),
+                        entry.created_at,
+                        entry.last_verified_at,
+                        entry.hit_count,
+                        json.dumps([c.model_dump() for c in entry.claims]),
+                        entry.max_volatility,
+                        entry.overall_freshness,
+                        entry.status,
+                    ),
+                )
                 conn.commit()
         except Exception as e:
             logger.error(f"Error saving entry {entry.id} to SQLite: {e}")
@@ -107,10 +126,9 @@ class SQLiteVectorStorage:
     def load_all_entries(self) -> Dict[str, CacheEntry]:
         entries: Dict[str, CacheEntry] = {}
         try:
-            with self._get_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute("SELECT * FROM cache_vectors")
-                rows = cursor.fetchall()
+            with self._lock:
+                conn = self._get_connection()
+                rows = conn.execute("SELECT * FROM cache_vectors").fetchall()
                 for r in rows:
                     claims_data = json.loads(r["claims_json"])
                     claims = [Claim(**c) for c in claims_data]
@@ -134,37 +152,40 @@ class SQLiteVectorStorage:
 
     def delete_entry(self, entry_id: str):
         try:
-            with self._get_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute("DELETE FROM cache_vectors WHERE id = ?", (entry_id,))
+            with self._lock:
+                conn = self._get_connection()
+                conn.execute("DELETE FROM cache_vectors WHERE id = ?", (entry_id,))
                 conn.commit()
         except Exception as e:
             logger.error(f"Error deleting entry {entry_id} from SQLite: {e}")
 
     def update_metrics(self, total: int, hits: int, misses: int, invalidations: int, tokens: int):
         try:
-            with self._get_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
+            with self._lock:
+                conn = self._get_connection()
+                conn.execute(
+                    """
                     UPDATE operational_metrics
                     SET total_requests = ?, cache_hits = ?, cache_misses = ?,
                         stale_invalidations = ?, tokens_saved = ?
                     WHERE id = 1
-                """, (total, hits, misses, invalidations, tokens))
+                    """,
+                    (total, hits, misses, invalidations, tokens),
+                )
                 conn.commit()
         except Exception as e:
             logger.error(f"Error updating metrics in SQLite: {e}")
 
     def load_metrics(self) -> Optional[dict]:
         try:
-            with self._get_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute("SELECT * FROM operational_metrics WHERE id = 1")
-                row = cursor.fetchone()
+            with self._lock:
+                conn = self._get_connection()
+                row = conn.execute("SELECT * FROM operational_metrics WHERE id = 1").fetchone()
                 if row:
                     return dict(row)
         except Exception as e:
             logger.error(f"Error loading metrics from SQLite: {e}")
         return None
+
 
 db_storage = SQLiteVectorStorage()

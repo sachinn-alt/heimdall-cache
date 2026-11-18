@@ -17,24 +17,43 @@ from .tavily_probe import tavily_prober
 
 logger = logging.getLogger("heimdall.proxy")
 
+
 class GatewayProxy:
     """
-    OpenAI & Bifrost-compatible proxy engine with Heimdall living cache integration
-    and real-time Server-Sent Events (SSE) streaming support.
+    High-Speed OpenAI & Bifrost-compatible proxy engine with Heimdall living cache
+    integration, pooled async HTTP, and real-time Server-Sent Events (SSE) streaming.
     """
+
+    def __init__(self):
+        self._upstream_http: Optional[httpx.AsyncClient] = None
+
+    def _get_upstream_client(self) -> httpx.AsyncClient:
+        if self._upstream_http is None or self._upstream_http.is_closed:
+            self._upstream_http = httpx.AsyncClient(
+                timeout=httpx.Timeout(12.0, connect=3.0),
+                limits=httpx.Limits(max_connections=20, max_keepalive_connections=10),
+            )
+        return self._upstream_http
+
+    async def close(self):
+        if self._upstream_http is not None and not self._upstream_http.is_closed:
+            await self._upstream_http.aclose()
+        await tavily_prober.close()
 
     async def handle_chat_completion(
         self, request: ChatCompletionRequest
     ) -> Tuple[ChatCompletionResponse, Dict[str, str]]:
         prompt = self._extract_prompt(request)
-        start_time = time.time()
+        start_time = time.perf_counter()
 
-        # Step 1: Query Heimdall Living Semantic Cache
-        entry, status, sim, meta = cache.lookup(prompt)
+        # Step 1: Non-blocking Living Semantic Cache Lookup
+        entry, status, sim, meta = await cache.async_lookup(prompt)
 
         # Case 1: Verified Living Cache Hit
         if entry is not None and status in ("HIT_VERIFIED", "HIT_STATIC"):
-            latency_ms = round((time.time() - start_time) * 1000, 2)
+            latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
+            cache.record_latency(is_cache_hit=True, latency_ms=latency_ms)
+
             headers = {
                 "X-Heimdall-Cache": status,
                 "X-Heimdall-Similarity": str(sim),
@@ -62,19 +81,30 @@ class GatewayProxy:
                 heimdall_meta={
                     "status": "CACHE_HIT",
                     "cache_type": status,
+                    "invalidation_detected": False,
                     "similarity": sim,
                     "freshness_score": entry.overall_freshness,
+                    "volatility_level": entry.max_volatility,
+                    "tavily_probed": bool(meta and meta.get("tavily_probed")),
                     "latency_ms": latency_ms,
-                    "verified_via": "Tavily Live Web Search",
+                    "verified_via": (meta or {}).get("verified_via", "Living Vector Memory"),
                     "sources": [s for c in entry.claims for s in c.sources][:3],
                 },
             )
             return resp, headers
 
-        # Case 2: Stale Invalidation or Cache Miss
-        upstream_answer, sources = await self._fetch_upstream_or_synthesize(prompt, request)
-        new_entry = cache.store(prompt, upstream_answer)
-        latency_ms = round((time.time() - start_time) * 1000, 2)
+        # Case 2: Stale Invalidation or Cache Miss -> Fast Async Grounding
+        upstream_answer, sources, grounded_by_tavily = await self._fetch_upstream_or_synthesize(prompt, request)
+
+        # Avoid double-probing when answer was just fetched live from Tavily!
+        new_entry = await cache.async_store(
+            prompt,
+            upstream_answer,
+            sources=sources,
+            already_grounded=grounded_by_tavily,
+        )
+        latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
+        cache.record_latency(is_cache_hit=False, latency_ms=latency_ms)
 
         cache_action = "STALE_INVALIDATED_AND_REFRESHED" if status == "STALE_INVALIDATED" else "CACHE_MISS_STORED"
         headers = {
@@ -86,6 +116,7 @@ class GatewayProxy:
             "X-Bifrost-Grounded": "true",
         }
 
+        combined_sources = sources or [s for c in new_entry.claims for s in c.sources][:3]
         resp = ChatCompletionResponse(
             id=f"chatcmpl-heimdall-fresh-{uuid.uuid4().hex[:8]}",
             model=request.model,
@@ -103,11 +134,15 @@ class GatewayProxy:
             ),
             heimdall_meta={
                 "status": cache_action,
+                "cache_type": status,
                 "invalidation_detected": (status == "STALE_INVALIDATED"),
                 "similarity": sim,
                 "freshness_score": new_entry.overall_freshness,
+                "volatility_level": new_entry.max_volatility,
+                "tavily_probed": grounded_by_tavily or bool(meta and meta.get("tavily_probed")),
                 "latency_ms": latency_ms,
-                "sources": sources,
+                "verified_via": "Tavily Live Web Search" if grounded_by_tavily else "Bifrost Upstream LLM",
+                "sources": combined_sources[:3],
             },
         )
         return resp, headers
@@ -118,11 +153,10 @@ class GatewayProxy:
         """
         Streams response tokens as Server-Sent Events (SSE) compliant with OpenAI spec.
         """
-        resp_obj, headers = await self.handle_chat_completion(request)
+        resp_obj, _ = await self.handle_chat_completion(request)
         content = resp_obj.choices[0].message.content
         chunk_id = resp_obj.id
 
-        # Yield header diagnostic chunk
         meta_chunk = {
             "id": chunk_id,
             "object": "chat.completion.chunk",
@@ -133,7 +167,6 @@ class GatewayProxy:
         }
         yield f"data: {json.dumps(meta_chunk)}\n\n"
 
-        # Stream words/tokens smoothly
         words = content.split(" ")
         for i, word in enumerate(words):
             token = word if i == 0 else " " + word
@@ -146,7 +179,6 @@ class GatewayProxy:
             }
             yield f"data: {json.dumps(chunk)}\n\n"
 
-        # Final stop chunk
         stop_chunk = {
             "id": chunk_id,
             "object": "chat.completion.chunk",
@@ -157,7 +189,8 @@ class GatewayProxy:
         yield f"data: {json.dumps(stop_chunk)}\n\n"
         yield "data: [DONE]\n\n"
 
-    def _extract_prompt(self, request: ChatCompletionRequest) -> str:
+    @staticmethod
+    def _extract_prompt(request: ChatCompletionRequest) -> str:
         for m in reversed(request.messages):
             if m.role == "user":
                 return m.content
@@ -165,7 +198,8 @@ class GatewayProxy:
 
     async def _fetch_upstream_or_synthesize(
         self, prompt: str, request: ChatCompletionRequest
-    ) -> Tuple[str, list]:
+    ) -> Tuple[str, list, bool]:
+        """Returns (answer_text, sources, grounded_by_tavily)."""
         if settings.UPSTREAM_API_KEY:
             try:
                 url = f"{settings.UPSTREAM_BASE_URL.rstrip('/')}/chat/completions"
@@ -173,36 +207,40 @@ class GatewayProxy:
                     "Authorization": f"Bearer {settings.UPSTREAM_API_KEY}",
                     "Content-Type": "application/json",
                 }
-                async with httpx.AsyncClient(timeout=30.0) as client:
-                    res = await client.post(url, json=request.model_dump(), headers=headers)
-                    if res.status_code == 200:
-                        data = res.json()
-                        text = data["choices"][0]["message"]["content"]
-                        return text, []
+                client = self._get_upstream_client()
+                res = await client.post(url, json=request.model_dump(), headers=headers)
+                if res.status_code == 200:
+                    data = res.json()
+                    text = data["choices"][0]["message"]["content"]
+                    return text, [], False
             except Exception as e:
                 logger.warning(f"Upstream call failed, falling back to Tavily synthesis: {e}")
 
-        # Intelligent Autonomous Fallback using Tavily
+        # Fast Non-Blocking Async Tavily Grounding
         search_results = []
         sources = []
-        if tavily_prober.client:
+        if tavily_prober.api_key:
             try:
-                s_res = tavily_prober.client.search(
-                    query=prompt, max_results=3, search_depth="basic", include_answer=True
+                s_res = await tavily_prober.async_search(
+                    query=prompt,
+                    max_results=3,
+                    search_depth="basic",
+                    include_answer=True,
                 )
                 direct_ans = s_res.get("answer", "")
                 search_results = s_res.get("results", [])
                 sources = [r["url"] for r in search_results if "url" in r]
                 if direct_ans:
-                    return f"{direct_ans}\n\n[Live ground truth verified via Tavily Search]", sources[:3]
+                    return f"{direct_ans}\n\n[Live ground truth verified via Tavily Search]", sources[:3], True
             except Exception as e:
-                logger.error(f"Fallback Tavily search error: {e}")
+                logger.error(f"Fallback async Tavily search error: {e}")
 
         if search_results:
             top_content = search_results[0].get("content", "")
             title = search_results[0].get("title", "")
-            return f"{top_content}\n\n[Live verified via Tavily: {title}]", sources[:3]
+            return f"{top_content}\n\n[Live verified via Tavily: {title}]", sources[:3], True
 
-        return f"Processed query: '{prompt}'. Result generated and cached.", []
+        return f"Processed query: '{prompt}'. Result generated and cached.", [], False
+
 
 proxy_engine = GatewayProxy()
