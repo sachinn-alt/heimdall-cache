@@ -30,6 +30,8 @@ wheels/
 # Cache & logs
 *.log
 *.db
+*.db-wal
+*.db-shm
 heimdall_cache.db
 .cache
 .pytest_cache/
